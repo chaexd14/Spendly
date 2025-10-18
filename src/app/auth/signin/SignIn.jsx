@@ -1,0 +1,82 @@
+'use client';
+
+import { useState } from 'react';
+import { signIn } from '../../../../lib/actions/auth-actions';
+import { useRouter } from 'next/navigation';
+
+function SignIn() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const router = useRouter();
+
+  const handleEmailAuth = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const result = await signIn(email, password);
+      if (!result.user) {
+        setError('Invalid email or password');
+      } else {
+        router.push('/home');
+      }
+    } catch (err) {
+      setError(
+        `Authentication error: ${
+          err instanceof Error ? err.message : 'Unknown error'
+        }`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <form
+        onSubmit={handleEmailAuth}
+        className="flex flex-col items-center justify-center gap-5 p-5 border border-red-400 h-fit w-fit"
+      >
+        <h1 className="text-3xl font-bold">Sign In</h1>
+        {error && <p>{error}</p>}
+
+        <div className="flex flex-col gap-2 p-3 border border-red-400">
+          <label className="text-lg font-medium">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="px-5 py-1 text-lg border border-red-400 focus:outline-none"
+          />
+        </div>
+
+        <div className="flex flex-col gap-2 p-3 border border-red-400">
+          <label className="text-lg font-medium">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="px-5 py-1 text-lg border border-red-400 focus:outline-none"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="px-5 py-3 text-xl font-semibold border border-red-400"
+        >
+          {isLoading ? 'Signing in...' : 'Sign In'}
+        </button>
+      </form>
+    </>
+  );
+}
+
+export default SignIn;
