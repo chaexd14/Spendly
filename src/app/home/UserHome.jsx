@@ -177,12 +177,15 @@ function UserHome({ session, allUsers, userBudget, userExpenses }) {
               <ul className="flex flex-col w-full gap-5">
                 {fetchedBudget &&
                   fetchedBudget.map((b) => (
-                    <li key={b.id} className="flex items-center justify-end">
+                    <li
+                      key={b.budgetId}
+                      className="flex items-center justify-end"
+                    >
                       <div className="flex justify-between w-full gap-3">
                         <p className="w-full text-xl font-medium">
                           Period Type:{' '}
                           <span className="text-lg font-normal ">
-                            {b.periodType ?? 'Unknown'}
+                            {b.budgetPeriodType ?? 'Unknown'}
                           </span>
                         </p>
 
@@ -196,7 +199,7 @@ function UserHome({ session, allUsers, userBudget, userExpenses }) {
                         <p className="w-full text-xl font-medium">
                           Expenses:{' '}
                           <span className="text-lg font-normal ">
-                            {b.totalExpenses ?? 'Unknown'}
+                            {b.totalBudgetExpenses ?? 'Unknown'}
                           </span>
                         </p>
 
@@ -210,8 +213,8 @@ function UserHome({ session, allUsers, userBudget, userExpenses }) {
                         <p className="w-full text-xl font-medium">
                           Start Date:{' '}
                           <span className="text-lg font-normal ">
-                            {b.startDate
-                              ? new Date(b.startDate).toLocaleDateString()
+                            {b.budgetStartDate
+                              ? new Date(b.budgetStartDate).toLocaleDateString()
                               : 'Unknown'}
                           </span>
                         </p>
@@ -219,8 +222,8 @@ function UserHome({ session, allUsers, userBudget, userExpenses }) {
                         <p className="w-full text-xl font-medium">
                           End Date:{' '}
                           <span className="text-lg font-normal ">
-                            {b.endDate
-                              ? new Date(b.endDate).toLocaleDateString()
+                            {b.budgetEndDate
+                              ? new Date(b.budgetEndDate).toLocaleDateString()
                               : 'Unknown'}
                           </span>
                         </p>
@@ -254,41 +257,44 @@ function UserHome({ session, allUsers, userBudget, userExpenses }) {
               <ul className="flex flex-col w-full gap-5">
                 {fetchedExpenses &&
                   fetchedExpenses.map((e) => (
-                    <li key={e.id} className="flex items-center justify-end">
+                    <li
+                      key={e.expenseId}
+                      className="flex items-center justify-end"
+                    >
                       <div className="flex justify-between w-full gap-3">
                         <p className="w-full text-xl font-medium">
                           Title:{' '}
                           <span className="text-lg font-normal ">
-                            {e.title}
+                            {e.expenseTitle}
                           </span>
                         </p>
 
                         <p className="w-full text-xl font-medium">
                           Category:{' '}
                           <span className="text-lg font-normal ">
-                            {e.category}
+                            {e.expenseCategory}
                           </span>
                         </p>
 
                         <p className="w-full text-xl font-medium">
                           Description:{' '}
                           <span className="text-lg font-normal ">
-                            {e.description}
+                            {e.expenseDescription}
                           </span>
                         </p>
 
                         <p className="w-full text-xl font-medium">
                           Amount:{' '}
                           <span className="text-lg font-normal ">
-                            {e.amount}
+                            {e.expenseAmount}
                           </span>
                         </p>
 
                         <p className="w-full text-xl font-medium">
                           Date:{' '}
                           <span className="text-lg font-normal ">
-                            {e.date
-                              ? new Date(e.date).toLocaleDateString()
+                            {e.expenseDate
+                              ? new Date(e.expenseDate).toLocaleDateString()
                               : 'Unknown'}
                           </span>
                         </p>

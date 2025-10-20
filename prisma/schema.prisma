@@ -23,10 +23,13 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now()) @updatedAt
 
-  sessions Session[]
-  accounts Account[]
-  budgets  Budgets[]
-  expenses Expenses[]
+  sessions      Session[]
+  accounts      Account[]
+  incomes       Income[]
+  budgets       Budget[]
+  expenses      Expense[]
+  goals         Goal[]
+  contributions Contribution[]
 
   @@unique([email])
   @@map("user")
@@ -77,36 +80,85 @@ model Verification {
   @@map("verification")
 }
 
-model Budgets {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String
-  user            User     @relation(fields: [userId], references: [id])
-  periodType      String
-  totalBudget     Int
-  totalExpenses   Int      @default(0)
-  remainingBudget Int      @default(0)
-  startDate       DateTime
-  endDate         DateTime
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @default(now()) @updatedAt
+model Income {
+  incomeId           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @map("user_id")
+  incomeSource       String   @map("income_source")
+  incomeAmount       Int      @map("income_amount")
+  incomeDateReceived DateTime @map("income_date_received")
+  incomeNotes        String   @map("income_notes")
+  createdAt          DateTime @default(now())
 
-  expenses Expenses[]
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("incomes")
+}
+
+model Budget {
+  budgetId            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId              String   @map("user_id")
+  budgetPeriodType    String   @map("budget_period_type")
+  totalBudget         Int      @map("total_budget")
+  totalBudgetExpenses Int      @default(0) @map("total_budget_expenses")
+  remainingBudget     Int      @default(0) @map("remaining_budget")
+  budgetStartDate     DateTime @map("budget_start_date")
+  budgetEndDate       DateTime @map("budget_end_date")
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now()) @updatedAt
+
+  expenses Expense[]
+
+  user User @relation(fields: [userId], references: [id])
 
   @@map("budgets")
 }
 
-model Expenses {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  budgetId    String   @db.ObjectId
-  budgets     Budgets  @relation(fields: [budgetId], references: [id], onDelete: Cascade)
-  title       String
-  category    String
-  description String
-  amount      Int
-  date        DateTime
-  createdAt   DateTime @default(now())
+model Expense {
+  expenseId          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String
+  budgetId           String   @map("budget_id") @db.ObjectId
+  expenseTitle       String   @map("expense_title")
+  expenseCategory    String   @map("expense_category")
+  expenseDescription String   @map("expense_description")
+  expenseAmount      Int      @map("expense_amount")
+  expenseDate        DateTime @map("expense_date")
+  createdAt          DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  budget Budget @relation(fields: [budgetId], references: [budgetId], onDelete: Cascade)
 
   @@map("expenses")
+}
+
+model Goal {
+  goalId            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String   @map("user_id")
+  goalName          String   @map("goal_name")
+  goalAmount        Int      @map("goal_amount")
+  goalCurrentAmount Int      @map("goal_current_amount")
+  goalTargetDate    DateTime @map("goal_target_date")
+  goalStatus        String   @map("goal_status")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
+
+  contributions Contribution[]
+  user          User           @relation(fields: [userId], references: [id])
+
+  @@map("goals")
+}
+
+model Contribution {
+  contributionId     String   @id @default(auto()) @map("_id") @db.ObjectId
+  goalId             String   @map("goal_id") @db.ObjectId
+  userId             String   @map("user_id")
+  contributionAmount Int      @map("contribution_amount")
+  contributionDate   DateTime @map("contribution_date")
+  contributionNote   String   @map("contribution_note")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+
+  goal Goal @relation(fields: [goalId], references: [goalId])
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("contributions")
 }
