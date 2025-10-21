@@ -21,15 +21,13 @@ function SignUp() {
 
     try {
       const result = await signUp(email, password, name);
-      if (result.user) {
-        router.push('/home');
+      if (!result.success) {
+        throw new Error(result.message);
       }
+
+      router.push('/home');
     } catch (err) {
-      setError(
-        `Authentication error: ${
-          err instanceof Error ? err.message : 'Unknown error'
-        }`
-      );
+      setError(err.message || 'Signup failed. Please try again later.');
     } finally {
       setIsLoading(false);
     }

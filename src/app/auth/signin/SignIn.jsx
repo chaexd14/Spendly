@@ -20,15 +20,13 @@ function SignIn() {
 
     try {
       const result = await signIn(email, password);
-      if (result.user) {
-        router.push('/home');
+      if (!result.success) {
+        throw new Error(result.message);
       }
+
+      router.push('/home');
     } catch (err) {
-      setError(
-        `Authentication error: ${
-          err instanceof Error ? err.message : 'Unknown error'
-        }`
-      );
+      setError(err.message || 'Signup failed. Please try again later.');
     } finally {
       setIsLoading(false);
     }
