@@ -21,9 +21,7 @@ function SignUp() {
 
     try {
       const result = await signUp(email, password, name);
-      if (!result.user) {
-        setError('Failed to create account');
-      } else {
+      if (result.user) {
         router.push('/home');
       }
     } catch (err) {

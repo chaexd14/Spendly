@@ -20,9 +20,7 @@ function SignIn() {
 
     try {
       const result = await signIn(email, password);
-      if (!result.user) {
-        setError('Invalid email or password');
-      } else {
+      if (result.user) {
         router.push('/home');
       }
     } catch (err) {
