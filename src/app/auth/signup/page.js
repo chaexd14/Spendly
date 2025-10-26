@@ -1,5 +1,5 @@
-// app/auth/signup/page.js
-import SignUp from './SignUp';
+import { SignUpForm } from './Signup-Form';
+
 import { auth } from '../../../../lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -13,11 +13,11 @@ export default async function SignUpPage() {
 
   return (
     <>
-      <section className="flex justify-center w-full min-h-screen border border-red-400">
-        <div>
-          <SignUp />
+      <div className="flex flex-col items-center justify-center gap-6 p-6 bg-muted min-h-svh md:p-10">
+        <div className="w-full max-w-sm md:max-w-lg">
+          <SignUpForm />
         </div>
-      </section>
+      </div>
     </>
   );
 }
