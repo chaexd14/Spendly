@@ -122,7 +122,7 @@ export default function ForgotPassword() {
   };
 
   // Step 3: Reset Password
-  const handleResetPassword = async () => {
+  const handleResetPassword = async (data) => {
     setLoading(true);
     setError('');
 
