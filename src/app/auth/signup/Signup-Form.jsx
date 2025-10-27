@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { signUp } from '../../../../lib/actions/auth-actions';
+import { authClient } from '../../../../lib/auth-client';
 import { useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
+import { Eye, EyeOff } from 'lucide-react';
 
 import {
   Card,
@@ -27,6 +29,8 @@ import {
 } from '@/components/ui/field';
 
 import { Input } from '@/components/ui/input';
+import PrivacyPolicy from '@/components/privacyPolicy';
+import TermsServices from '@/components/termsServices';
 
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,6 +41,7 @@ export function SignUpForm({ className, ...props }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const formSchema = z
     .object({
@@ -74,6 +79,24 @@ export function SignUpForm({ className, ...props }) {
       toast.error(err.message);
       setError(err.message || 'Signup failed. Please try again later.');
     } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      await authClient.signIn.social({
+        provider: 'google',
+        callbackURL: '/home',
+      });
+    } catch (error) {
+      toast.error(error.message);
+      setError(error.message || 'Signin failed. Please try again later.');
+    } finally {
+      toast.success('Signin Succesfully');
       setIsLoading(false);
     }
   };
@@ -149,7 +172,7 @@ export function SignUpForm({ className, ...props }) {
                         <Input
                           {...field}
                           id={field.name}
-                          type="password"
+                          type={showPassword ? 'text' : 'password'}
                           placeholder="********"
                           aria-invalid={fieldState.invalid}
                         />
@@ -168,13 +191,29 @@ export function SignUpForm({ className, ...props }) {
                         <FieldLabel htmlFor={field.name}>
                           Confirm Password
                         </FieldLabel>
-                        <Input
-                          {...field}
-                          id={field.name}
-                          type="password"
-                          placeholder="********"
-                          aria-invalid={fieldState.invalid}
-                        />
+                        <div className="flex items-center w-full max-w-sm gap-2">
+                          <Input
+                            {...field}
+                            id={field.name}
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="********"
+                            aria-invalid={fieldState.invalid}
+                          />
+
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="p-2"
+                          >
+                            {showPassword ? (
+                              <EyeOff className="w-5 h-5" />
+                            ) : (
+                              <Eye className="w-5 h-5" />
+                            )}
+                          </Button>
+                        </div>
+
                         {fieldState.invalid && (
                           <FieldError errors={[fieldState.error]} />
                         )}
@@ -206,7 +245,11 @@ export function SignUpForm({ className, ...props }) {
                 </FieldSeparator>
 
                 <Field>
-                  <Button variant="outline" type="button">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={signInWithGoogle}
+                  >
                     Login with Google
                   </Button>
                 </Field>
@@ -223,8 +266,8 @@ export function SignUpForm({ className, ...props }) {
       </Card>
 
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a>Terms of Service</a> and{' '}
-        <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <TermsServices /> and{' '}
+        <PrivacyPolicy />
       </FieldDescription>
     </div>
   );

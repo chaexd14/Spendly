@@ -1,13 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { signIn } from '../../../../lib/actions/auth-actions';
+import { authClient } from '../../../../lib/auth-client';
 import { useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
+import { Eye, EyeOff } from 'lucide-react';
 
 import {
   Card,
@@ -27,6 +29,8 @@ import {
 } from '@/components/ui/field';
 
 import { Input } from '@/components/ui/input';
+import PrivacyPolicy from '@/components/privacyPolicy';
+import TermsServices from '@/components/termsServices';
 
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,6 +41,7 @@ export function LoginForm({ className, ...props }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email('Please enter a valid email address.'),
@@ -69,6 +74,24 @@ export function LoginForm({ className, ...props }) {
     }
   };
 
+  const signInWithGoogle = async () => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      await authClient.signIn.social({
+        provider: 'google',
+        callbackURL: '/home',
+      });
+    } catch (error) {
+      toast.error(error.message);
+      setError(error.message || 'Signin failed. Please try again later.');
+    } finally {
+      toast.success('Signin Succesfully');
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
@@ -82,7 +105,11 @@ export function LoginForm({ className, ...props }) {
           <form onSubmit={form.handleSubmit(handleEmailAuth)}>
             <FieldGroup>
               <Field>
-                <Button variant="outline" type="button">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={signInWithGoogle}
+                >
                   Login with Google
                 </Button>
               </Field>
@@ -126,13 +153,28 @@ export function LoginForm({ className, ...props }) {
                         <FieldLabel htmlFor="password">Password</FieldLabel>
                       </div>
 
-                      <Input
-                        {...field}
-                        id="password"
-                        type="password"
-                        placeholder="********"
-                        aria-invalid={fieldState.invalid}
-                      />
+                      <div className="flex items-center w-full max-w-sm gap-2">
+                        <Input
+                          {...field}
+                          id="password"
+                          type={showPassword ? 'text' : 'password'}
+                          placeholder="********"
+                          aria-invalid={fieldState.invalid}
+                        />
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="p-2"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="size-3" />
+                          ) : (
+                            <Eye className="size-3" />
+                          )}
+                        </Button>
+                      </div>
 
                       <Field>
                         <div className="flex items-center justify-center">
@@ -174,8 +216,8 @@ export function LoginForm({ className, ...props }) {
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a>Terms of Service</a> and{' '}
-        <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our <TermsServices /> and{' '}
+        <PrivacyPolicy />
       </FieldDescription>
     </div>
   );
