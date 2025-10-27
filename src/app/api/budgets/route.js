@@ -3,7 +3,12 @@ import { addBudget, getBudget } from '../../../../lib/actions/budgets-action';
 
 export async function POST(req) {
   const session = await auth.api.getSession({ headers: req.headers });
-  if (!session) return new Response('Unauthorized', { status: 401 });
+  if (!session) {
+    return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   const { periodType, totalBudget, startDate } = await req.json();
 

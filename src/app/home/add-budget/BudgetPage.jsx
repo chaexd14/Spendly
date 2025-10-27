@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { addBudget } from '../../../../lib/actions/budgets-action';
 import { useRouter } from 'next/navigation';
 
 function BudgetPage({ session }) {
@@ -12,7 +11,6 @@ function BudgetPage({ session }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const userId = session.user.id;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,29 +19,41 @@ function BudgetPage({ session }) {
 
     if (!totalBudget || !startDate) {
       alert('Please fill all fields');
+      setIsLoading(false);
       return;
     }
 
     try {
-      const result = await addBudget(
-        userId,
-        periodType,
-        totalBudget,
-        startDate
-      );
-      if (!result) {
-        setError('Failed to add Budget');
+      const response = await fetch('/api/budgets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          periodType,
+          totalBudget,
+          startDate,
+        }),
+      });
+
+      const contentType = response.headers.get('content-type');
+      let data;
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
       } else {
-        router.push('/home');
+        data = await response.text();
       }
 
-      // Reset form
+      if (!response.ok) {
+        throw new Error(data.message || data || 'Failed to add budget');
+      }
+
+      router.push('/home');
       setPeriodType('');
       setTotalBudget('');
       setStartDate('');
     } catch (err) {
       console.error(err);
-      alert('Failed to add budget');
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }

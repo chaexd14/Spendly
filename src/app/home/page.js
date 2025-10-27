@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { getAllUser } from '../../../lib/actions/user-actions';
 import { getBudget } from '../../../lib/actions/budgets-action';
 import { getExpenses } from '../../../lib/actions/expenses-actions';
+import { getIncome } from '../../../lib/actions/income-actions';
 
 async function page() {
   const session = await auth.api.getSession({
@@ -16,23 +17,22 @@ async function page() {
     redirect('/auth/signin');
   }
 
-  const allUsers = await getAllUser();
-  const userBudget = await getBudget(session.user.id);
-  const userExpenses = await getExpenses(session.user.id);
+  // Fetch initial data securely on the server
+  const [allUsers, userBudget, userExpenses, userIncome] = await Promise.all([
+    getAllUser(),
+    getBudget(session.user.id),
+    getExpenses(session.user.id),
+    getIncome(session.user.id),
+  ]);
 
   return (
-    <>
-      <section className="flex justify-center w-full min-h-screen border border-red-400">
-        <div className="flex justify-center w-full gap-10 h-fit">
-          <UserHome
-            session={session}
-            allUsers={allUsers}
-            userBudget={userBudget}
-            userExpenses={userExpenses}
-          />
-        </div>
-      </section>
-    </>
+    <UserHome
+      session={session}
+      initialUsers={allUsers}
+      initialBudgets={userBudget}
+      initialExpenses={userExpenses}
+      initialIncomes={userIncome}
+    />
   );
 }
 

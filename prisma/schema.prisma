@@ -83,6 +83,7 @@ model Verification {
 model Income {
   incomeId           String   @id @default(auto()) @map("_id") @db.ObjectId
   userId             String   @map("user_id")
+  incomeTitle        String   @map("(income_title)")
   incomeSource       String   @map("income_source")
   incomeAmount       Int      @map("income_amount")
   incomeDateReceived DateTime @map("income_date_received")

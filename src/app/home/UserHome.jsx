@@ -1,322 +1,152 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { signOut } from '../../../lib/actions/auth-actions';
 import { useRouter } from 'next/navigation';
 
-function UserHome({ session, allUsers, userBudget, userExpenses }) {
-  const [fetchedUser, setFetchedUsers] = useState(allUsers);
-  const [fetchedBudget, setFetchedBudget] = useState(userBudget);
-  const [fetchedExpenses, setFetchedExpenses] = useState(userExpenses);
-  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
-  const [isLoadingBudget, setIsLoadingBudget] = useState(false);
-  const [isLoadingExpenses, setIsLoadingExpenses] = useState(false);
+export default function UserHome({
+  session,
+  initialUsers,
+  initialBudgets,
+  initialExpenses,
+  initialIncomes,
+}) {
   const router = useRouter();
   const user = session.user;
 
-  const handleSignout = async () => {
+  // --- State ---
+  const [users, setUsers] = useState(initialUsers);
+  const [budgets, setBudgets] = useState(initialBudgets);
+  const [expenses, setExpenses] = useState(initialExpenses);
+  const [incomes, setIncomes] = useState(initialIncomes);
+
+  const [loading, setLoading] = useState({
+    users: false,
+    budgets: false,
+    expenses: false,
+    incomes: false,
+  });
+
+  const [error, setError] = useState('');
+
+  // --- Handlers ---
+  const handleSignOut = async () => {
     await signOut();
     router.push('/auth/signin');
   };
 
-  const refreshUsers = async () => {
-    setIsLoadingUsers(true);
+  const navigateTo = (path) => router.push(path);
+
+  // --- Generic fetch function ---
+  const fetchData = useCallback(async (endpoint, setter, key) => {
+    setLoading((prev) => ({ ...prev, [key]: true }));
+    setError('');
+
     try {
-      const res = await fetch('/api/user');
-      if (!res.ok) throw new Error('Failed to fetch users');
-      const users = await res.json();
-      setFetchedUsers(users);
+      const res = await fetch(`/api/${endpoint}`);
+      if (!res.ok) throw new Error(`Failed to fetch ${endpoint}`);
+      const data = await res.json();
+      setter(data);
     } catch (err) {
       console.error(err);
+      setError(err.message);
     } finally {
-      setIsLoadingUsers(false);
+      setLoading((prev) => ({ ...prev, [key]: false }));
     }
-  };
+  }, []);
 
-  const refreshExpenses = async () => {
-    setIsLoadingExpenses(true);
-    try {
-      const res = await fetch('/api/expenses');
-      if (!res.ok) throw new Error('Failed to fetch budgets');
-      const expenses = await res.json();
-      setFetchedExpenses(expenses);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoadingExpenses(false);
-    }
-  };
+  // --- Refresh functions ---
+  const refreshUsers = () => fetchData('user', setUsers, 'users');
+  const refreshBudgets = () => fetchData('budgets', setBudgets, 'budgets');
+  const refreshExpenses = () => fetchData('expenses', setExpenses, 'expenses');
+  const refreshIncomes = () => fetchData('incomes', setIncomes, 'incomes');
 
-  const refreshBudget = async () => {
-    setIsLoadingBudget(true);
-    try {
-      const res = await fetch('/api/budgets');
-      if (!res.ok) throw new Error('Failed to fetch budgets');
-      const budgets = await res.json();
-      setFetchedBudget(budgets);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoadingBudget(false);
-    }
-  };
-
-  const budgetPage = () => {
-    router.push('/home/add-budget');
-  };
-
-  const expensesPage = () => {
-    router.push('/home/add-expenses');
-  };
   return (
-    <>
-      <section className="flex flex-wrap justify-start w-full">
-        <div className="flex flex-col items-center justify-center gap-5 p-10 border border-red-400 h-fit w-fit">
-          <h1 className="mb-5 text-3xl font-bold">Welcome to Spendly</h1>
-
-          <section>
-            <h2 className="mb-5 text-2xl font-semibold">Account Information</h2>
-
-            <div className="flex flex-col gap-3">
-              <p className="text-xl font-medium">
-                User ID:{' '}
-                <span className="text-lg font-normal">
-                  {user?.id || 'Unknown'}
-                </span>
-              </p>
-
-              <p className="text-xl font-medium">
-                User Name:{' '}
-                <span className="text-lg font-normal ">
-                  {user?.name || 'Unknown'}
-                </span>
-              </p>
-              <p className="text-xl font-medium">
-                Email:{' '}
-                <span className="text-lg font-normal ">
-                  {user?.email || 'Unknown'}
-                </span>
-              </p>
-            </div>
-          </section>
-
-          <div className="flex items-center justify-between w-full gap-5">
-            <button
-              onClick={handleSignout}
-              className="px-5 py-3 mt-5 text-xl font-semibold border border-red-400"
-            >
-              Log Out
-            </button>
-
-            <button
-              onClick={budgetPage}
-              className="px-5 py-3 mt-5 text-xl font-semibold border border-red-400"
-            >
-              Budget Now
-            </button>
-
-            <button
-              onClick={expensesPage}
-              className="px-5 py-3 mt-5 text-xl font-semibold border border-red-400"
-            >
-              Add Expenses
-            </button>
-          </div>
+    <section className="flex flex-wrap gap-10 p-6">
+      {/* Account Info */}
+      <div>
+        <h1>Welcome, {user.name}</h1>
+        <p>ID: {user.id}</p>
+        <p>Email: {user.email}</p>
+        <div>
+          <button onClick={handleSignOut}>Log Out</button>
+          <button onClick={() => navigateTo('/home/add-budget')}>Budget</button>
+          <button onClick={() => navigateTo('/home/add-expenses')}>
+            Add Expenses
+          </button>
         </div>
+      </div>
 
-        <div className="flex flex-col items-center justify-center gap-5 p-10 border border-red-400 h-fit w-fit">
-          <h1 className="mb-5 text-3xl font-bold">Registered User</h1>
+      {/* Users */}
+      <div>
+        <h2>Registered Users</h2>
+        {loading.users ? (
+          <p>Loading...</p>
+        ) : (
+          users.map((u) => (
+            <p key={u.id}>
+              {u.name} — {u.email}
+            </p>
+          ))
+        )}
+        <button onClick={refreshUsers} disabled={loading.users}>
+          Refresh Users
+        </button>
+      </div>
 
-          <section>
-            <h2 className="mb-5 text-2xl font-semibold">Account Information</h2>
+      {/* Budgets */}
+      <div>
+        <h2>Your Budgets</h2>
+        {loading.budgets ? (
+          <p>Loading...</p>
+        ) : (
+          budgets.map((b) => (
+            <p key={b.budgetId}>
+              {b.budgetPeriodType} — {b.totalBudget} — Remaining:{' '}
+              {b.remainingBudget}
+            </p>
+          ))
+        )}
+        <button onClick={refreshBudgets} disabled={loading.budgets}>
+          Refresh Budgets
+        </button>
+      </div>
 
-            <div className="flex flex-col items-center justify-center gap-5 w-[600px]">
-              <ul className="flex flex-col w-full gap-5">
-                {fetchedUser &&
-                  fetchedUser.map((u) => (
-                    <li key={u.id} className="flex items-center justify-end">
-                      <div className="flex justify-between w-full gap-3">
-                        <p className="w-full text-xl font-medium">
-                          User Name:{' '}
-                          <span className="text-lg font-normal ">
-                            {u.name ?? 'Unknown'}
-                          </span>
-                        </p>
+      {/* Expenses */}
+      <div>
+        <h2>Your Expenses</h2>
+        {loading.expenses ? (
+          <p>Loading...</p>
+        ) : (
+          expenses.map((e) => (
+            <p key={e.expenseId}>
+              {e.expenseTitle} — {e.expenseCategory} — ₱{e.expenseAmount}
+            </p>
+          ))
+        )}
+        <button onClick={refreshExpenses} disabled={loading.expenses}>
+          Refresh Expenses
+        </button>
+      </div>
 
-                        <p className="w-full text-xl font-medium">
-                          Email:{' '}
-                          <span className="text-lg font-normal ">
-                            {u.email ?? 'Unknown'}
-                          </span>
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-              </ul>
+      {/* Income */}
+      <div>
+        <h2>Your Income</h2>
+        {loading.incomes ? (
+          <p>Loading...</p>
+        ) : (
+          incomes.map((i) => (
+            <p key={i.incomeId}>
+              {i.incomeTitle} — {i.incomeSource} — ₱{i.incomeAmount}
+            </p>
+          ))
+        )}
+        <button onClick={refreshIncomes} disabled={loading.incomes}>
+          Refresh Income
+        </button>
+      </div>
 
-              <button
-                type="submit"
-                onClick={refreshUsers}
-                disabled={isLoadingUsers}
-                className="px-5 py-3 mt-5 text-xl font-semibold border border-red-400"
-              >
-                {isLoadingUsers ? 'Refreshing...' : 'Refresh Users'}
-              </button>
-            </div>
-          </section>
-        </div>
-
-        {/* User Budgets */}
-        <div className="flex flex-col items-center justify-center gap-5 p-10 border border-red-400 h-fit w-fit">
-          <h1 className="mb-5 text-3xl font-bold">Your Current Budgets</h1>
-
-          <section>
-            <h2 className="mb-5 text-2xl font-semibold">Budget Information</h2>
-
-            <div className="flex flex-col items-center justify-center gap-5 w-[600px]">
-              <ul className="flex flex-col w-full gap-5">
-                {fetchedBudget &&
-                  fetchedBudget.map((b) => (
-                    <li
-                      key={b.budgetId}
-                      className="flex items-center justify-end"
-                    >
-                      <div className="flex justify-between w-full gap-3">
-                        <p className="w-full text-xl font-medium">
-                          Period Type:{' '}
-                          <span className="text-lg font-normal ">
-                            {b.budgetPeriodType ?? 'Unknown'}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Budget:{' '}
-                          <span className="text-lg font-normal ">
-                            {b.totalBudget ?? 'Unknown'}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Expenses:{' '}
-                          <span className="text-lg font-normal ">
-                            {b.totalBudgetExpenses ?? 'Unknown'}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Remaining Budget:{' '}
-                          <span className="text-lg font-normal ">
-                            {b.remainingBudget ?? 'Unknown'}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Start Date:{' '}
-                          <span className="text-lg font-normal ">
-                            {b.budgetStartDate
-                              ? new Date(b.budgetStartDate).toLocaleDateString()
-                              : 'Unknown'}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          End Date:{' '}
-                          <span className="text-lg font-normal ">
-                            {b.budgetEndDate
-                              ? new Date(b.budgetEndDate).toLocaleDateString()
-                              : 'Unknown'}
-                          </span>
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-              </ul>
-
-              <button
-                type="submit"
-                onClick={refreshBudget}
-                disabled={isLoadingBudget}
-                className="px-5 py-3 mt-5 text-xl font-semibold border border-red-400"
-              >
-                {isLoadingBudget ? 'Refreshing...' : 'Refresh Budget'}
-              </button>
-            </div>
-          </section>
-        </div>
-
-        {/* User Expenses */}
-        <div className="flex flex-col items-center justify-center gap-5 p-10 border border-red-400 h-fit w-fit">
-          <h1 className="mb-5 text-3xl font-bold">Your Current Expenses</h1>
-
-          <section>
-            <h2 className="mb-5 text-2xl font-semibold">
-              Expenses Information
-            </h2>
-
-            <div className="flex flex-col items-center justify-center gap-5 w-[600px]">
-              <ul className="flex flex-col w-full gap-5">
-                {fetchedExpenses &&
-                  fetchedExpenses.map((e) => (
-                    <li
-                      key={e.expenseId}
-                      className="flex items-center justify-end"
-                    >
-                      <div className="flex justify-between w-full gap-3">
-                        <p className="w-full text-xl font-medium">
-                          Title:{' '}
-                          <span className="text-lg font-normal ">
-                            {e.expenseTitle}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Category:{' '}
-                          <span className="text-lg font-normal ">
-                            {e.expenseCategory}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Description:{' '}
-                          <span className="text-lg font-normal ">
-                            {e.expenseDescription}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Amount:{' '}
-                          <span className="text-lg font-normal ">
-                            {e.expenseAmount}
-                          </span>
-                        </p>
-
-                        <p className="w-full text-xl font-medium">
-                          Date:{' '}
-                          <span className="text-lg font-normal ">
-                            {e.expenseDate
-                              ? new Date(e.expenseDate).toLocaleDateString()
-                              : 'Unknown'}
-                          </span>
-                        </p>
-                      </div>
-                    </li>
-                  ))}
-              </ul>
-
-              <button
-                type="submit"
-                onClick={refreshExpenses}
-                disabled={isLoadingExpenses}
-                className="px-5 py-3 mt-5 text-xl font-semibold border border-red-400"
-              >
-                {isLoadingExpenses ? 'Refreshing...' : 'Refresh Expenses'}
-              </button>
-            </div>
-          </section>
-        </div>
-      </section>
-    </>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </section>
   );
 }
-
-export default UserHome;
