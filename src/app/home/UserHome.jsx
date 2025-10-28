@@ -61,13 +61,17 @@ export default function UserHome({
   const refreshExpenses = () => fetchData('expenses', setExpenses, 'expenses');
   const refreshIncomes = () => fetchData('incomes', setIncomes, 'incomes');
 
+  console.log('Session:', session);
+  console.log(session.user.image);
+
   return (
-    <section className="flex flex-wrap gap-10 p-6">
+    <section className="flex flex-wrap gap-10">
       {/* Account Info */}
       <div>
         <h1>Welcome, {user.name}</h1>
         <p>ID: {user.id}</p>
         <p>Email: {user.email}</p>
+        <p>Role: {user.role}</p>
         <div>
           <button onClick={handleSignOut}>Log Out</button>
           <button onClick={() => navigateTo('/home/add-budget')}>Budget</button>
@@ -78,21 +82,27 @@ export default function UserHome({
       </div>
 
       {/* Users */}
-      <div>
-        <h2>Registered Users</h2>
-        {loading.users ? (
-          <p>Loading...</p>
-        ) : (
-          users.map((u) => (
-            <p key={u.id}>
-              {u.name} — {u.email}
-            </p>
-          ))
-        )}
-        <button onClick={refreshUsers} disabled={loading.users}>
-          Refresh Users
-        </button>
-      </div>
+      {user.role === 'admin' && (
+        <div>
+          <h2>Registered Users</h2>
+          {loading.users ? (
+            <p>Loading...</p>
+          ) : (
+            users.map((u) => (
+              <div key={u.id}>
+                <p>
+                  {u.name} — {u.email} — {u.role}
+                </p>
+
+                <img src={u.image} alt="img" />
+              </div>
+            ))
+          )}
+          <button onClick={refreshUsers} disabled={loading.users}>
+            Refresh Users
+          </button>
+        </div>
+      )}
 
       {/* Budgets */}
       <div>
