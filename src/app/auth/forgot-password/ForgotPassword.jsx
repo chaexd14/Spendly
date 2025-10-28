@@ -122,12 +122,12 @@ export default function ForgotPassword() {
   };
 
   // Step 3: Reset Password
-  const handleResetPassword = async () => {
+  const handleResetPassword = async (data) => {
     setLoading(true);
     setError('');
 
     try {
-      const res = await resetPassword(email, otp, newPassword);
+      const res = await resetPassword(email, otp, data.password);
       if (res.success) {
         toast.success('Your password has been reset successfully');
         router.push('/home');

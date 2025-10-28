@@ -1,17 +1,17 @@
 import UserHome from './UserHome';
-import { auth } from '../../../lib/auth';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { getAllUser } from '../../../lib/actions/user-actions';
 import { getBudget } from '../../../lib/actions/budgets-action';
 import { getExpenses } from '../../../lib/actions/expenses-actions';
 import { getIncome } from '../../../lib/actions/income-actions';
+import { getSessionWithRole } from '../../../lib/session';
+
+import { SideBar } from '@/components/SideBar';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 async function page() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await getSessionWithRole();
 
   if (!session) {
     redirect('/auth/signin');
@@ -26,13 +26,23 @@ async function page() {
   ]);
 
   return (
-    <UserHome
-      session={session}
-      initialUsers={allUsers}
-      initialBudgets={userBudget}
-      initialExpenses={userExpenses}
-      initialIncomes={userIncome}
-    />
+    <SidebarProvider>
+      <section className="flex min-h-screen ">
+        <SideBar />
+        <main className="flex-1 p-5 overflow-y-auto">
+          <div className="flex items-start gap-5">
+            <SidebarTrigger />
+            <UserHome
+              session={session}
+              initialUsers={allUsers}
+              initialBudgets={userBudget}
+              initialExpenses={userExpenses}
+              initialIncomes={userIncome}
+            />
+          </div>
+        </main>
+      </section>
+    </SidebarProvider>
   );
 }
 
