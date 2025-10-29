@@ -7,7 +7,7 @@ import { getExpenses } from '../../../lib/actions/expenses-actions';
 import { getIncome } from '../../../lib/actions/income-actions';
 import { getSessionWithRole } from '../../../lib/session';
 
-import { SideBar } from '@/components/SideBar';
+import { SideBar } from '@/components/sideBar/SideBar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 async function page() {
@@ -28,7 +28,7 @@ async function page() {
   return (
     <SidebarProvider>
       <section className="flex min-h-screen ">
-        <SideBar />
+        <SideBar session={session} />
         <main className="flex-1 p-5 overflow-y-auto">
           <div className="flex items-start gap-5">
             <SidebarTrigger />

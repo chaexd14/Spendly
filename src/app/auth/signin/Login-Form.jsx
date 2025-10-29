@@ -45,7 +45,7 @@ export function LoginForm({ className, ...props }) {
 
   const formSchema = z.object({
     email: z.string().email('Please enter a valid email address.'),
-    password: z.string(),
+    password: z.string().min(1, 'Password is empty.'),
   });
 
   const form = useForm({
@@ -128,14 +128,22 @@ export function LoginForm({ className, ...props }) {
                 name="email"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                  <Field>
+                    <FieldLabel
+                      htmlFor={field.name}
+                      className={cn(fieldState.invalid && 'text-destructive')}
+                    >
+                      Email
+                    </FieldLabel>
                     <Input
                       {...field}
                       id={field.name}
                       type="email"
                       placeholder="m@example.com"
-                      aria-invalid={fieldState.invalid}
+                      className={cn(
+                        fieldState.invalid &&
+                          'border-destructive focus-visible:ring-destructive'
+                      )}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -148,25 +156,36 @@ export function LoginForm({ className, ...props }) {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <>
-                    <Field data-invalid={fieldState.invalid}>
+                    <Field>
                       <div className="flex items-center">
-                        <FieldLabel htmlFor="password">Password</FieldLabel>
+                        <FieldLabel
+                          htmlFor="password"
+                          className={cn(
+                            fieldState.invalid && 'text-destructive'
+                          )}
+                        >
+                          Password
+                        </FieldLabel>
                       </div>
 
                       <div className="flex items-center w-full max-w-sm gap-2">
-                        <Input
-                          {...field}
-                          id="password"
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="********"
-                          aria-invalid={fieldState.invalid}
-                        />
+                        <div className="w-full">
+                          <Input
+                            {...field}
+                            id="password"
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="********"
+                            className={cn(
+                              fieldState.invalid &&
+                                'border-destructive focus-visible:ring-destructive'
+                            )}
+                          />
+                        </div>
 
                         <Button
                           type="button"
                           variant="outline"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="p-2"
                         >
                           {showPassword ? (
                             <EyeOff className="size-3" />
