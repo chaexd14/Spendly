@@ -54,7 +54,7 @@ export function SideBar({ session }) {
   };
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="bg-DEFAULT">
       <SidebarHeader>
         <NavUser session={session} />
       </SidebarHeader>
