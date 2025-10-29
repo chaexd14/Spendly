@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { signOut } from '../../../lib/actions/auth-actions';
 import { useRouter } from 'next/navigation';
 
 export default function UserHome({
@@ -29,12 +28,6 @@ export default function UserHome({
 
   const [error, setError] = useState('');
 
-  // --- Handlers ---
-  const handleSignOut = async () => {
-    await signOut();
-    router.push('/auth/signin');
-  };
-
   const navigateTo = (path) => router.push(path);
 
   // --- Generic fetch function ---
@@ -61,9 +54,6 @@ export default function UserHome({
   const refreshExpenses = () => fetchData('expenses', setExpenses, 'expenses');
   const refreshIncomes = () => fetchData('incomes', setIncomes, 'incomes');
 
-  console.log('Session:', session);
-  console.log(session.user.image);
-
   return (
     <section className="flex flex-wrap gap-10">
       {/* Account Info */}
@@ -73,7 +63,6 @@ export default function UserHome({
         <p>Email: {user.email}</p>
         <p>Role: {user.role}</p>
         <div>
-          <button onClick={handleSignOut}>Log Out</button>
           <button onClick={() => navigateTo('/home/add-budget')}>Budget</button>
           <button onClick={() => navigateTo('/home/add-expenses')}>
             Add Expenses
