@@ -2,80 +2,119 @@
 
 import { signOut } from '../../../lib/actions/auth-actions';
 import { useRouter } from 'next/navigation';
-
-import {
-  Wallet,
-  PiggyBank,
-  Banknote,
-  CreditCard,
-  Target,
-  LogOut,
-} from 'lucide-react';
+import { useState } from 'react';
 import {
   Sidebar,
-  SidebarContent,
-  SidebarGroupLabel,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarHeader,
+  SidebarContent,
   SidebarFooter,
   SidebarRail,
-  useSidebar,
+  useSidebar, // ✅ Import this
 } from '@/components/ui/sidebar';
-
-import { NavUser } from './nav-user';
-import { NavMain } from './nav-main';
-
+import { LogOut } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
-import { useState } from 'react';
-
-// Menu items.
-const items = [
-  { title: 'Income', url: '#', icon: Banknote },
-  { title: 'Budget', url: '#', icon: Wallet },
-  { title: 'Expenses', url: '#', icon: CreditCard },
-  { title: 'Goals', url: '#', icon: Target },
-  { title: 'Savings', url: '#', icon: PiggyBank },
-];
+import { NavMain } from './nav-main';
+import { NavUser } from './nav-user';
+import { Wallet, PiggyBank, Banknote, CreditCard, Target } from 'lucide-react';
+import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
 
 export function SideBar({ session }) {
-  const { state } = useSidebar();
   const [isLoading, setIsLoading] = useState(false);
-
-  const isCollapsed = state === 'collapsed';
   const router = useRouter();
+  const { state } = useSidebar(); // ✅ Detect current sidebar state
+  const isCollapsed = state === 'collapsed';
 
-  // --- Handlers ---
   const handleSignOut = async () => {
     setIsLoading(true);
     await signOut();
     router.push('/auth/signin');
   };
 
+  const navItems = [
+    {
+      title: 'Income',
+      url: '/dashboard/income',
+      icon: Banknote,
+      items: [
+        { title: 'Record Income', url: '#' },
+        { title: 'Manage Income', url: '#' },
+      ],
+    },
+    {
+      title: 'Budget',
+      url: '/dashboard/budgets',
+      icon: Wallet,
+      items: [
+        { title: 'Create Budget', url: '#' },
+        { title: 'Manage Budgets', url: '#' },
+      ],
+    },
+    {
+      title: 'Expenses',
+      url: '/dashboard/expenses',
+      icon: CreditCard,
+      items: [
+        { title: 'Add Expense', url: '#' },
+        { title: 'Expense History', url: '#' },
+      ],
+    },
+    {
+      title: 'Goals',
+      url: '/dashboard/goals',
+      icon: Target,
+      items: [
+        { title: 'Set Goal', url: '#' },
+        { title: 'Track Goals', url: '#' },
+      ],
+    },
+    {
+      title: 'Savings',
+      url: '/dashboard/savings',
+      icon: PiggyBank,
+      items: [
+        { title: 'Add Savings', url: '#' },
+        { title: 'Savings Overview', url: '#' },
+      ],
+    },
+  ];
+
   return (
-    <Sidebar collapsible="icon" className="bg-DEFAULT">
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <NavUser session={session} />
       </SidebarHeader>
+
       <SidebarContent>
-        <NavMain />
+        <NavMain items={navItems} />
       </SidebarContent>
+
       <SidebarFooter>
-        <Button onClick={handleSignOut} disabled={isLoading}>
-          {isLoading ? (
-            <>
-              <Spinner className="w-4 h-4 mr-2 animate-spin" />
-              {!isCollapsed && <span>Signing out...</span>}
-            </>
-          ) : (
-            <>
-              <LogOut className="w-5 h-5" />
-              {!isCollapsed && <span>Sign Out</span>}
-            </>
-          )}
-        </Button>
+        <Collapsible asChild>
+          <CollapsibleTrigger asChild>
+            <Button
+              onClick={handleSignOut}
+              disabled={isLoading}
+              className={`flex items-center justify-center w-full gap-2 ${
+                isCollapsed ? 'px-2 py-2' : 'px-4 py-3'
+              }`}
+            >
+              {isLoading ? (
+                <>
+                  <Spinner className="w-4 h-4 animate-spin" />
+                  {!isCollapsed && <span>Signing out...</span>}
+                </>
+              ) : (
+                <>
+                  <LogOut className="w-5 h-5" />
+                  {!isCollapsed && <span>Sign Out</span>}
+                </>
+              )}
+            </Button>
+          </CollapsibleTrigger>
+        </Collapsible>
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );

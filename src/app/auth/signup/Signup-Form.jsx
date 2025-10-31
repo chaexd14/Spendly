@@ -73,7 +73,7 @@ export function SignUpForm({ className, ...props }) {
       const result = await signUp(data.email, data.password, data.name);
       if (!result.success) throw new Error(result.message);
 
-      router.push('/home');
+      router.push('/dashboard');
       toast.success('SignUp Successfully');
     } catch (err) {
       toast.error(err.message);
@@ -90,7 +90,7 @@ export function SignUpForm({ className, ...props }) {
     try {
       await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/home',
+        callbackURL: '/dashboard',
       });
     } catch (error) {
       toast.error(error.message);

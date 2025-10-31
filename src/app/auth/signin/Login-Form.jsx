@@ -64,7 +64,7 @@ export function LoginForm({ className, ...props }) {
       const result = await signIn(data.email, data.password);
       if (!result.success) throw new Error(result.message);
 
-      router.push('/home');
+      router.push('/dashboard');
       toast.success('Signin Succesfully');
     } catch (err) {
       toast.error(err.message);
@@ -81,7 +81,7 @@ export function LoginForm({ className, ...props }) {
     try {
       await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/home',
+        callbackURL: '/dashboard',
       });
     } catch (error) {
       toast.error(error.message);
