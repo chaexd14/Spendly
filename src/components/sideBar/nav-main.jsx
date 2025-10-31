@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  Wallet,
-  PiggyBank,
-  Banknote,
-  CreditCard,
-  Target,
-  LogOut,
-} from 'lucide-react';
-
+import { ChevronRight } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -25,110 +17,66 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import { ChevronRight } from 'lucide-react';
+import { LayoutDashboard } from 'lucide-react';
 
-export function NavMain() {
-  const items = [
-    {
-      title: 'Income',
-      url: '#',
-      icon: Banknote,
-      items: [
-        {
-          title: 'Record Income',
-        },
-        {
-          title: 'Manage Income',
-        },
-      ],
-    },
-    {
-      title: 'Budget',
-      url: '#',
-      icon: Wallet,
-      items: [
-        {
-          title: 'Create Budget',
-        },
-        {
-          title: 'Manage Budgets',
-        },
-      ],
-    },
-    {
-      title: 'Expenses',
-      url: '#',
-      icon: CreditCard,
-      items: [
-        {
-          title: 'Add Expense',
-        },
-        {
-          title: 'Expense History',
-        },
-      ],
-    },
-    {
-      title: 'Goals',
-      url: '#',
-      icon: Target,
-      items: [
-        {
-          title: 'Set Goal',
-        },
-        {
-          title: 'Track Goals',
-        },
-      ],
-    },
-    {
-      title: 'Savings',
-      url: '#',
-      icon: PiggyBank,
-      items: [
-        {
-          title: 'Add Savings',
-        },
-        {
-          title: 'Savings Overview',
-        },
-      ],
-    },
-  ];
-
+export function NavMain({ items }) {
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Actions</SidebarGroupLabel>
+    <>
+      <SidebarGroup>
+        <SidebarGroupLabel>Home</SidebarGroupLabel>
+        <SidebarMenu>
+          <SidebarMenuButton
+            tooltip="Dashboard"
+            className="px-3 py-5 text-base"
+          >
+            <LayoutDashboard />
+            <a href="/dashboard">
+              <span>Dashboard</span>
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenu>
+      </SidebarGroup>
 
-      <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible key={item.title} asChild className="group/collapsible">
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
+      <SidebarGroup>
+        <SidebarGroupLabel>Actions</SidebarGroupLabel>
+        <SidebarMenu>
+          {items.map((item) => (
+            <Collapsible key={item.title} asChild className="group/collapsible">
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton
+                    tooltip={item.title}
+                    className="px-3 py-5 text-base"
+                  >
+                    {item.icon && <item.icon />}
+                    <a href={item.url}>
+                      <span className="truncate">{item.title}</span>
+                    </a>
+                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
 
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuItem key={subItem.title}>
-                      <SidebarMenuButton asChild>
-                        <a href="#">
-                          <span>{subItem.title}</span>
-                        </a>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
-      </SidebarMenu>
-    </SidebarGroup>
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {item.items?.map((sub) => (
+                      <SidebarMenuSubItem key={sub.title}>
+                        <SidebarMenuSubButton
+                          asChild
+                          className="px-3 py-5 text-base"
+                        >
+                          <a href={sub.url} className="text-sm">
+                            <span>{sub.title}</span>
+                          </a>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          ))}
+        </SidebarMenu>
+      </SidebarGroup>
+    </>
   );
 }

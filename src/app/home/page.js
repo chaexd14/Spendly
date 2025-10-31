@@ -26,23 +26,13 @@ async function page() {
   ]);
 
   return (
-    <SidebarProvider>
-      <section className="flex min-h-screen ">
-        <SideBar session={session} />
-        <main className="flex-1 p-5 overflow-y-auto">
-          <div className="flex items-start gap-5">
-            <SidebarTrigger />
-            <UserHome
-              session={session}
-              initialUsers={allUsers}
-              initialBudgets={userBudget}
-              initialExpenses={userExpenses}
-              initialIncomes={userIncome}
-            />
-          </div>
-        </main>
-      </section>
-    </SidebarProvider>
+    <UserHome
+      session={session}
+      initialUsers={allUsers}
+      initialBudgets={userBudget}
+      initialExpenses={userExpenses}
+      initialIncomes={userIncome}
+    />
   );
 }
 

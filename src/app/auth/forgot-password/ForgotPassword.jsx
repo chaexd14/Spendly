@@ -130,7 +130,7 @@ export default function ForgotPassword() {
       const res = await resetPassword(email, otp, data.password);
       if (res.success) {
         toast.success('Your password has been reset successfully');
-        router.push('/home');
+        router.push('/dashboard');
         setStep(1);
         setEmail('');
         setOtp('');
