@@ -20,7 +20,7 @@ export default async function layout({ children }) {
       <SideBar session={session} />
 
       <SidebarInset>
-        <header className="flex items-center h-12 gap-2 border-b">
+        <header className="flex items-center gap-2 border-b h-14">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger />
           </div>
