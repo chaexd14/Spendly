@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-function IncomePage() {
+function Income_Page() {
   const [formData, setFormData] = useState({
     title: '',
     source: '',
@@ -176,4 +176,4 @@ function IncomePage() {
   );
 }
 
-export default IncomePage;
+export default Income_Page;
