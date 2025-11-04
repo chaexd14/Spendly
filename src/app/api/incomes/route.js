@@ -1,6 +1,7 @@
 import { auth } from '../../../../lib/auth';
 import { addIncome, getIncome } from '../../../../lib/actions/income-actions';
 
+// RECORD INCOME
 export async function POST(req) {
   try {
     const session = await auth.api.getSession({ headers: req.headers });
@@ -55,6 +56,7 @@ export async function POST(req) {
   }
 }
 
+// FETCH ALL INCOME
 export async function GET(req) {
   try {
     const session = await auth.api.getSession({ headers: req.headers });
