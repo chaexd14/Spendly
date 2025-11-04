@@ -10,9 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+
+import RecordIncomeForm from './RecordIncomeForm';
 
 // Icon
 import { TrendingUp } from 'lucide-react';
@@ -20,12 +23,17 @@ import { TrendingUp } from 'lucide-react';
 // Chart
 import ChartLineLinear from '@/app/components/charts/chart-line-linear';
 
-export default function IncomePage({ initialIncomes }) {
+export default function IncomePage({ initialIncomes, initialTotalIncome }) {
   const [incomes, setIncomes] = useState(initialIncomes);
+  const [totalIncome, setTotalIncome] = useState(initialTotalIncome);
+  const [incomeGrowth, setIncomeGrowth] = useState(initialIncomes);
 
   const [loading, setLoading] = useState({
     incomes: false,
+    totalIncome: false,
   });
+
+  const [error, setError] = useState('');
 
   const fetchData = useCallback(async (endpoint, setter, key) => {
     setLoading((prev) => ({ ...prev, [key]: true }));
@@ -45,52 +53,71 @@ export default function IncomePage({ initialIncomes }) {
   }, []);
 
   const refreshIncomes = () => fetchData('incomes', setIncomes, 'incomes');
+  const refreshTotalIncome = () =>
+    fetchData('incomes/total', setTotalIncome, 'totalIncome');
 
   return (
-    <Card className="w-fit">
-      <CardHeader className="py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-2xl">Total Income</CardTitle>
-            <CardDescription>As of June 2025</CardDescription>
+    <div className="grid grid-cols-4 grid-rows-1 gap-5">
+      <Card className="col-span-3">
+        <CardHeader className="py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl">Total Income</CardTitle>
+              <CardDescription>As of June 2025</CardDescription>
+            </div>
+            <Badge
+              className="gap-2 text-base text-muted-foreground"
+              variant="outline"
+            >
+              <TrendingUp size={16} />${totalIncome.growthPercentage}%
+            </Badge>
           </div>
-          <Badge
-            className="gap-2 text-base text-muted-foreground"
+        </CardHeader>
+
+        <Separator />
+
+        <CardContent className="py-0">
+          <div className="flex items-center justify-center gap-5 h-[250px]">
+            <div className="flex flex-col items-center justify-center w-[300px] min-w-fit gap-3">
+              <CardTitle className="text-6xl">
+                {loading.totalIncome ? (
+                  <span>₱...</span>
+                ) : (
+                  <span>₱{totalIncome.totalIncome}</span>
+                )}
+              </CardTitle>
+
+              <CardDescription className="text-sm">
+                +₱{totalIncome.latestIncomeRecord} from last record
+              </CardDescription>
+            </div>
+
+            <Separator orientation="vertical" className="h-full" />
+
+            <div className="flex items-center w-full h-full py-5">
+              <ChartLineLinear />
+            </div>
+          </div>
+        </CardContent>
+
+        <Separator />
+
+        <CardFooter className="py-4">
+          <Button
             variant="outline"
+            className="w-full"
+            onClick={refreshTotalIncome}
           >
-            <TrendingUp size={16} />
-            +4%
-          </Badge>
-        </div>
-      </CardHeader>
+            {loading.totalIncome ? (
+              <span>Refreshing...</span>
+            ) : (
+              <span>Refresh</span>
+            )}
+          </Button>
+        </CardFooter>
+      </Card>
 
-      <Separator />
-
-      <CardContent className="py-0">
-        <div className="flex items-center justify-center gap-5 h-[250px]">
-          <div className="flex flex-col items-center justify-center w-[280px] min-w-fit gap-3">
-            <CardTitle className="text-6xl">$5000</CardTitle>
-
-            <CardDescription className="text-sm">
-              +$20 from last month
-            </CardDescription>
-          </div>
-
-          <Separator orientation="vertical" className="h-full" />
-
-          <div className="flex items-center w-full h-full py-5">
-            <ChartLineLinear />
-          </div>
-        </div>
-      </CardContent>
-
-      <Separator />
-
-      <CardFooter className="py-4">
-        <Button variant="outline" className="w-full">
-          Refresh
-        </Button>
-      </CardFooter>
-    </Card>
+      <RecordIncomeForm />
+    </div>
   );
 }

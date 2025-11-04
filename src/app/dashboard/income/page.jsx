@@ -1,7 +1,10 @@
 import IncomePage from './IncomePage';
 
 import { redirect } from 'next/navigation';
-import { getIncome } from '../../../../lib/actions/income-actions';
+import {
+  getIncome,
+  getTotalIncome,
+} from '../../../../lib/actions/income-actions';
 import { getSessionWithRole } from '../../../../lib/session';
 
 export default async function page() {
@@ -12,11 +15,17 @@ export default async function page() {
   }
 
   // Fetch initial data securely on the server
-  const [userIncome] = await Promise.all([getIncome(session.user.id)]);
+  const [userIncome, userTotalIncome] = await Promise.all([
+    getIncome(session.user.id),
+    getTotalIncome(session.user.id),
+  ]);
 
   return (
     <div>
-      <IncomePage initialIncomes={userIncome} />
+      <IncomePage
+        initialIncomes={userIncome}
+        initialTotalIncome={userTotalIncome}
+      />
     </div>
   );
 }

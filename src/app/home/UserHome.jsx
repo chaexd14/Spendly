@@ -129,7 +129,7 @@ export default function UserHome({
       </div>
 
       {/* Income */}
-      <div>
+      {/* <div>
         <h2>Your Income</h2>
         {loading.incomes ? (
           <p>Loading...</p>
@@ -143,7 +143,7 @@ export default function UserHome({
         <button onClick={refreshIncomes} disabled={loading.incomes}>
           Refresh Income
         </button>
-      </div>
+      </div> */}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
     </section>

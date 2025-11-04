@@ -1,4 +1,4 @@
-import IncomePage from './IncomePage';
+import Income_Page from './Income-Page';
 import { auth } from '../../../../lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -14,7 +14,7 @@ async function page() {
 
   return (
     <>
-      <IncomePage session={session} />
+      <Income_Page session={session} />
     </>
   );
 }
