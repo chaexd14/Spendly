@@ -36,10 +36,6 @@ export function SideBar({ session }) {
       title: 'Income',
       url: '/dashboard/income',
       icon: Banknote,
-      items: [
-        { title: 'Record Income', url: '#' },
-        { title: 'Manage Income', url: '#' },
-      ],
     },
     {
       title: 'Budget',
