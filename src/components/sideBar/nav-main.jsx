@@ -52,26 +52,30 @@ export function NavMain({ items }) {
                     <a href={item.url}>
                       <span className="truncate">{item.title}</span>
                     </a>
-                    <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    {item.items && (
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    )}
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
 
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {item.items?.map((sub) => (
-                      <SidebarMenuSubItem key={sub.title}>
-                        <SidebarMenuSubButton
-                          asChild
-                          className="px-3 py-5 text-base"
-                        >
-                          <a href={sub.url} className="text-sm">
-                            <span>{sub.title}</span>
-                          </a>
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
+                {item.items && (
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.items?.map((sub) => (
+                        <SidebarMenuSubItem key={sub.title}>
+                          <SidebarMenuSubButton
+                            asChild
+                            className="px-3 py-5 text-base"
+                          >
+                            <a href={sub.url} className="text-sm">
+                              <span>{sub.title}</span>
+                            </a>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                )}
               </SidebarMenuItem>
             </Collapsible>
           ))}

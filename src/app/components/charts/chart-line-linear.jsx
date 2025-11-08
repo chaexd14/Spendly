@@ -26,11 +26,6 @@ import {
 
 export const description = 'A linear line chart';
 
-const chartData = [
-  { month: 'January', desktop: 186 },
-  { month: 'February', desktop: 305 },
-];
-
 const chartConfig = {
   desktop: {
     label: 'Desktop',
@@ -38,16 +33,27 @@ const chartConfig = {
   },
 };
 
-export default function ChartLineLinear() {
+export default function ChartLineLinear({ incomes }) {
+  const chartData = (incomes ?? []).map((i) => ({
+    month: new Date(i.incomeDateReceived).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    }),
+    amount: i.incomeAmount,
+  }));
+
+  console.log(chartData);
+
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <ChartContainer config={chartConfig} className="w-full h-full">
+    <ResponsiveContainer>
+      <ChartContainer config={chartConfig}>
         <LineChart
           accessibilityLayer
           data={chartData}
           margin={{
-            left: 12,
-            right: 12,
+            top: 20,
+            left: 10,
+            right: 10,
           }}
         >
           <CartesianGrid vertical={false} />
@@ -55,7 +61,7 @@ export default function ChartLineLinear() {
             dataKey="month"
             tickLine={false}
             axisLine={false}
-            tickMargin={8}
+            tickMargin={5}
             tickFormatter={(value) => value.slice(0, 3)}
           />
           <ChartTooltip
@@ -63,7 +69,7 @@ export default function ChartLineLinear() {
             content={<ChartTooltipContent hideLabel />}
           />
           <Line
-            dataKey="desktop"
+            dataKey="amount"
             type="linear"
             stroke="var(--color-desktop)"
             strokeWidth={2}

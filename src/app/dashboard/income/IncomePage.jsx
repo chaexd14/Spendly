@@ -28,9 +28,13 @@ import { DataTable } from './table/data-table';
 import { Columns, Incomes } from './table/colums';
 import { DataTablePagination } from './table/DataTablePagination';
 
+import { useIsMobile } from '@/hooks/use-mobile';
+
 export default function IncomePage({ initialIncomes, initialTotalIncome }) {
   const [incomes, setIncomes] = useState(initialIncomes);
   const [totalIncome, setTotalIncome] = useState(initialTotalIncome);
+
+  const isMobile = useIsMobile();
 
   const [loading, setLoading] = useState({
     incomes: false,
@@ -67,7 +71,7 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
           <CardHeader className="w-full py-4">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-2xl">Total Income</CardTitle>
+                <CardTitle className="lg:text-2xl">Total Income</CardTitle>
                 <CardDescription>As of June 2025</CardDescription>
               </div>
               <Badge
@@ -87,10 +91,10 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
           <Separator />
 
           <CardContent className="w-full h-full py-0">
-            <div className="grid h-full grid-cols-6 grid-rows-1">
-              <div className="flex items-center justify-between w-full col-span-2 gap-5">
+            <div className="grid h-full grid-rows-2 lg:grid-cols-6 lg:grid-rows-1">
+              <div className="flex items-center justify-between w-full gap-5 lg:col-span-2">
                 <div className="flex flex-col items-center justify-center w-full gap-3">
-                  <CardTitle className="text-6xl">
+                  <CardTitle className="text-5xl lg:text-6xl">
                     {loading.totalIncome ? (
                       <span>₱...</span>
                     ) : (
@@ -98,7 +102,7 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
                     )}
                   </CardTitle>
 
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-xs lg:text-sm">
                     {loading.totalIncome ? (
                       <span>₱... </span>
                     ) : (
@@ -108,11 +112,11 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
                   </CardDescription>
                 </div>
 
-                <Separator orientation="vertical" />
+                {!isMobile && <Separator orientation="vertical" />}
               </div>
 
-              <div className="col-span-4 col-start-3 py-6 pl-6 pr-0">
-                <ChartLineLinear />
+              <div className="py-3 pr-0 lg:col-start-3 lg:col-span-4 lg:pl-6">
+                <ChartLineLinear incomes={incomes} />
               </div>
             </div>
           </CardContent>
