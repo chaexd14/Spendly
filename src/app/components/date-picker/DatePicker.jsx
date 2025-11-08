@@ -15,23 +15,25 @@ import {
 // ICON
 import { Calendar as CalendarIcon } from 'lucide-react';
 
-export default function DatePicker() {
-  const [date, setDate] = useState();
-
+export default function DatePicker({ value, onChange }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          data-empty={!date}
+          data-empty={!value}
           className="data-[empty=true]:text-muted-foreground w-[280px] justify-between text-left font-normal"
         >
-          {date ? format(date, 'PPP') : <span>Select date</span>}
+          {value ? format(value, 'PPP') : <span>Select date</span>}
           <CalendarIcon />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar mode="single" selected={date} onSelect={setDate} />
+        <Calendar
+          mode="single"
+          selected={value || new Date()}
+          onSelect={(date) => onChange(date || new Date())}
+        />
       </PopoverContent>
     </Popover>
   );

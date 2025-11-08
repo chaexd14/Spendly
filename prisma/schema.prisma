@@ -88,7 +88,6 @@ model Income {
   incomeSource       String   @map("income_source")
   incomeAmount       Int      @map("income_amount")
   incomeDateReceived DateTime @map("income_date_received")
-  incomeNotes        String   @map("income_notes")
   createdAt          DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
