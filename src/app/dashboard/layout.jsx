@@ -7,6 +7,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { getSessionWithRole } from '../../../lib/session';
 import { redirect } from 'next/navigation';
+import { Toaster } from '@/components/ui/sonner';
 
 export default async function layout({ children }) {
   const session = await getSessionWithRole();
@@ -26,7 +27,12 @@ export default async function layout({ children }) {
           </div>
         </header>
 
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-6">
+          {children}
+          <Toaster position="top-right" richColors expand />
+        </main>
+
+        <div className="h-[30px]" />
       </SidebarInset>
     </SidebarProvider>
   );

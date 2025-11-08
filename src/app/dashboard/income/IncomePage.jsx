@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 
-import RecordIncomeForm from './RecordIncomeForm';
+import RecordIncomeForm from './forms/RecordIncomeForm';
 
 // Icon
 import { TrendingUp } from 'lucide-react';
@@ -23,10 +23,14 @@ import { TrendingUp } from 'lucide-react';
 // Chart
 import ChartLineLinear from '@/app/components/charts/chart-line-linear';
 
+// TABLE
+import { DataTable } from './table/data-table';
+import { Columns, Incomes } from './table/colums';
+import { DataTablePagination } from './table/DataTablePagination';
+
 export default function IncomePage({ initialIncomes, initialTotalIncome }) {
   const [incomes, setIncomes] = useState(initialIncomes);
   const [totalIncome, setTotalIncome] = useState(initialTotalIncome);
-  const [incomeGrowth, setIncomeGrowth] = useState(initialIncomes);
 
   const [loading, setLoading] = useState({
     incomes: false,
@@ -57,67 +61,94 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
     fetchData('incomes/total', setTotalIncome, 'totalIncome');
 
   return (
-    <div className="grid grid-cols-4 grid-rows-1 gap-5">
-      <Card className="col-span-3">
-        <CardHeader className="py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl">Total Income</CardTitle>
-              <CardDescription>As of June 2025</CardDescription>
-            </div>
-            <Badge
-              className="gap-2 text-base text-muted-foreground"
-              variant="outline"
-            >
-              <TrendingUp size={16} />${totalIncome.growthPercentage}%
-            </Badge>
-          </div>
-        </CardHeader>
-
-        <Separator />
-
-        <CardContent className="py-0">
-          <div className="flex items-center justify-center gap-5 h-[250px]">
-            <div className="flex flex-col items-center justify-center w-[300px] min-w-fit gap-3">
-              <CardTitle className="text-6xl">
+    <div className="flex flex-col gap-5">
+      <div className="grid grid-cols-1 grid-rows-2 gap-5 lg:grid-cols-4 lg:grid-rows-1">
+        <Card className="flex flex-col items-center justify-between lg:col-span-3">
+          <CardHeader className="w-full py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-2xl">Total Income</CardTitle>
+                <CardDescription>As of June 2025</CardDescription>
+              </div>
+              <Badge
+                className="gap-2 text-sm text-muted-foreground"
+                variant="outline"
+              >
+                <TrendingUp size={16} />{' '}
                 {loading.totalIncome ? (
-                  <span>₱...</span>
+                  <span>₱...%</span>
                 ) : (
-                  <span>₱{totalIncome.totalIncome}</span>
+                  <span>₱{totalIncome.growthPercentage}%</span>
                 )}
-              </CardTitle>
-
-              <CardDescription className="text-sm">
-                +₱{totalIncome.latestIncomeRecord} from last record
-              </CardDescription>
+              </Badge>
             </div>
+          </CardHeader>
 
-            <Separator orientation="vertical" className="h-full" />
+          <Separator />
 
-            <div className="flex items-center w-full h-full py-5">
-              <ChartLineLinear />
+          <CardContent className="w-full h-full py-0">
+            <div className="grid h-full grid-cols-6 grid-rows-1">
+              <div className="flex items-center justify-between w-full col-span-2 gap-5">
+                <div className="flex flex-col items-center justify-center w-full gap-3">
+                  <CardTitle className="text-6xl">
+                    {loading.totalIncome ? (
+                      <span>₱...</span>
+                    ) : (
+                      <span>₱{totalIncome.totalIncome}</span>
+                    )}
+                  </CardTitle>
+
+                  <CardDescription className="text-sm">
+                    {loading.totalIncome ? (
+                      <span>₱... </span>
+                    ) : (
+                      <span>+₱{totalIncome.latestIncomeRecord} </span>
+                    )}
+                    from last record
+                  </CardDescription>
+                </div>
+
+                <Separator orientation="vertical" />
+              </div>
+
+              <div className="col-span-4 col-start-3 py-6 pl-6 pr-0">
+                <ChartLineLinear />
+              </div>
             </div>
-          </div>
-        </CardContent>
+          </CardContent>
 
-        <Separator />
+          <Separator />
 
-        <CardFooter className="py-4">
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={refreshTotalIncome}
-          >
-            {loading.totalIncome ? (
-              <span>Refreshing...</span>
-            ) : (
-              <span>Refresh</span>
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
+          <CardFooter className="w-full py-4">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                refreshTotalIncome();
+                refreshIncomes();
+              }}
+            >
+              {loading.totalIncome ? (
+                <span>Refreshing...</span>
+              ) : (
+                <span>Refresh</span>
+              )}
+            </Button>
+          </CardFooter>
+        </Card>
 
-      <RecordIncomeForm />
+        <RecordIncomeForm
+          className="w-full"
+          onSuccess={() => {
+            refreshIncomes();
+            refreshTotalIncome();
+          }}
+        />
+      </div>
+
+      <div>
+        <DataTable columns={Columns} data={incomes} />
+      </div>
     </div>
   );
 }
