@@ -1,3 +1,5 @@
+'use server';
+
 import IncomePage from './IncomePage';
 
 import { redirect } from 'next/navigation';
