@@ -98,6 +98,7 @@ model Income {
 model Budget {
   budgetId            String   @id @default(auto()) @map("_id") @db.ObjectId
   userId              String   @map("user_id")
+  budgetTitle         String   @map("budget_title")
   budgetPeriodType    String   @map("budget_period_type")
   totalBudget         Int      @map("total_budget")
   totalBudgetExpenses Int      @default(0) @map("total_budget_expenses")

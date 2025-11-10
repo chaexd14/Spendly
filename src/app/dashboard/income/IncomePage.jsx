@@ -25,8 +25,7 @@ import ChartLineLinear from '@/app/components/charts/chart-line-linear';
 
 // TABLE
 import { DataTable } from './table/data-table';
-import { Columns, Incomes } from './table/colums';
-import { DataTablePagination } from './table/DataTablePagination';
+import { Columns } from './table/colums';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -80,9 +79,9 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
               >
                 <TrendingUp size={16} />{' '}
                 {loading.totalIncome ? (
-                  <span>₱...%</span>
+                  <span>...%</span>
                 ) : (
-                  <span>₱{totalIncome.growthPercentage}%</span>
+                  <span>{totalIncome.growthPercentage}%</span>
                 )}
               </Badge>
             </div>

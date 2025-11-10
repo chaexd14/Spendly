@@ -1,6 +1,5 @@
 'use client';
 
-import { TrendingUp } from 'lucide-react';
 import {
   CartesianGrid,
   Line,
@@ -8,15 +7,6 @@ import {
   XAxis,
   ResponsiveContainer,
 } from 'recharts';
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 
 import {
   ChartContainer,
@@ -37,7 +27,7 @@ export default function ChartLineLinear({ incomes }) {
   const chartData = (incomes ?? []).map((i) => ({
     month: new Date(i.incomeDateReceived).toLocaleDateString('en-US', {
       month: 'short',
-      day: 'numeric',
+      year: 'numeric',
     }),
     amount: i.incomeAmount,
   }));
@@ -62,7 +52,7 @@ export default function ChartLineLinear({ incomes }) {
             tickLine={false}
             axisLine={false}
             tickMargin={5}
-            tickFormatter={(value) => value.slice(0, 3)}
+            tickFormatter={(value) => value}
           />
           <ChartTooltip
             cursor={false}
