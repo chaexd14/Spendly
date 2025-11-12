@@ -1,9 +1,23 @@
+'use server';
 import BudgetPage from './BudgetPage';
 
-export default function page() {
+import { getBudget } from '../../../../lib/actions/budgets-action';
+import { getSessionWithRole } from '../../../../lib/session';
+import { redirect } from 'next/navigation';
+
+export default async function page() {
+  const session = await getSessionWithRole();
+
+  if (!session) {
+    redirect('/auth/signin');
+  }
+
+  // Fetch initial data
+  const [userBudgets] = await Promise.all([getBudget(session.user.id)]);
+
   return (
     <>
-      <BudgetPage />
+      <BudgetPage userBudgets={userBudgets} />
     </>
   );
 }

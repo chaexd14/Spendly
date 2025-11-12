@@ -10,10 +10,11 @@ export async function POST(req) {
     });
   }
 
-  const { periodType, totalBudget, startDate } = await req.json();
+  const { periodType, totalBudget, startDate, budgetTitle } = await req.json();
 
   const budget = await addBudget(
     session.user.id,
+    budgetTitle,
     periodType,
     Number(totalBudget),
     new Date(startDate)

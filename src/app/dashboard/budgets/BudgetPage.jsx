@@ -12,6 +12,9 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
+
+import { useCallback, useState } from 'react';
 
 // Form
 import RecordBudgetForm from './form/RecordBudgetForm';
@@ -19,46 +22,46 @@ import RecordBudgetForm from './form/RecordBudgetForm';
 // Chart
 import ChartBarHorizontal from '@/app/components/charts/chart-bar-horizontal';
 
-export default function BudgetPage() {
-  const data = [
-    {
-      title: 'Food',
-      periodType: 'monthly',
-      totalBudget: 1000,
-      remainingBudget: 800,
-    },
-    {
-      title: 'Shopee',
-      periodType: 'monthly',
-      totalBudget: 2000,
-      remainingBudget: 1300,
-    },
-    {
-      title: 'Utilities',
-      periodType: 'monthly',
-      totalBudget: 5000,
-      remainingBudget: 2500,
-    },
-    {
-      title: 'sample1',
-      periodType: 'monthly',
-      totalBudget: 5000,
-      remainingBudget: 2500,
-    },
+export default function BudgetPage({ userBudgets }) {
+  const [budgets, setbudgets] = useState(userBudgets.budgets);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    {
-      title: 'sample4',
-      periodType: 'monthly',
-      totalBudget: 5000,
-      remainingBudget: 2500,
-    },
-    {
-      title: 'sample3',
-      periodType: 'monthly',
-      totalBudget: 5000,
-      remainingBudget: 2500,
-    },
-  ];
+  const [budgetSum, setBudgetSum] = useState(userBudgets.totalBudgetSum);
+  const [expensesSum, setExpensesSum] = useState(userBudgets.totalExpensesSum);
+
+  const data = budgets.map((b) => ({
+    title: b.budgetTitle,
+    periodType: b.budgetPeriodType,
+    totalBudget: b.totalBudget,
+    remainingBudget: b.remainingBudget,
+    startDate: new Date(b.budgetStartDate).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    }),
+    endDate: new Date(b.budgetEndDate).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }),
+  }));
+
+  const refreshBudget = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/budgets');
+      if (!res.ok) throw new Error('Failed to fetch budgets');
+      const data = await res.json();
+      setbudgets(data.budgets);
+      setBudgetSum(data.totalBudgetSum);
+      setExpensesSum(data.totalExpensesSum);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="grid grid-cols-3 gap-5">
@@ -75,7 +78,8 @@ export default function BudgetPage() {
                         Budget for {d.title}
                       </CardTitle>
                       <CardDescription className="text-xs">
-                        As of June 2025
+                        Active from <span>{d.startDate}</span> to{' '}
+                        <span>{d.endDate}</span>
                       </CardDescription>
                     </div>
                     <Badge className="">{d.periodType}</Badge>
@@ -103,7 +107,11 @@ export default function BudgetPage() {
 
       {/* Form */}
       <div className="col-span-3 row-start-3 lg:col-start-1 lg:row-start-2 lg:col-span-1">
-        <RecordBudgetForm />
+        <RecordBudgetForm
+          onSuccess={() => {
+            refreshBudget();
+          }}
+        />
       </div>
 
       <div className="col-span-3 row-start-2 lg:col-span-2 lg:col-start-2 lg:row-start-2 h-[300px] lg:h-full">
@@ -118,14 +126,31 @@ export default function BudgetPage() {
           <Separator />
 
           <CardContent className="flex-1 py-5">
-            <ChartBarHorizontal />
+            <ChartBarHorizontal
+              budgetSum={budgetSum}
+              expensesSum={expensesSum}
+            />
           </CardContent>
 
           <Separator />
 
           <CardFooter className="py-5">
-            <Button className="w-full" variant="outline">
-              Refresh
+            <Button
+              variant="outline"
+              className="w-full"
+              disabled={loading}
+              onClick={() => {
+                refreshBudget();
+              }}
+            >
+              {loading ? (
+                <>
+                  <Spinner />
+                  <span>Refreshing...</span>
+                </>
+              ) : (
+                <span>Refresh</span>
+              )}
             </Button>
           </CardFooter>
         </Card>

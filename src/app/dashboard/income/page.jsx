@@ -16,7 +16,7 @@ export default async function page() {
     redirect('/auth/signin');
   }
 
-  // Fetch initial data securely on the server
+  // Fetch initial data
   const [userIncome, userTotalIncome] = await Promise.all([
     getIncome(session.user.id),
     getTotalIncome(session.user.id),

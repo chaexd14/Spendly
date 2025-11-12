@@ -15,7 +15,7 @@ export async function POST(req) {
       );
     }
 
-    const { title, source, amount, date, note } = await req.json();
+    const { title, source, amount, date } = await req.json();
 
     if (amount === null || amount === undefined) {
       return new Response(
@@ -32,8 +32,7 @@ export async function POST(req) {
       title,
       source,
       Number(amount),
-      new Date(date),
-      note
+      new Date(date)
     );
 
     return new Response(JSON.stringify(income), {
