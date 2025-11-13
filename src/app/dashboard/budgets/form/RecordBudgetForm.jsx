@@ -25,6 +25,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import DatePicker from '@/app/components/date-picker/DatePicker';
 import { Button } from '@/components/ui/button';
@@ -40,6 +47,7 @@ import { cn } from '@/lib/utils';
 
 export default function RecordBudgetForm({ onSuccess }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [deduct, setDeduct] = useState(false);
   const [error, setError] = useState('');
 
   const formSchema = z.object({
@@ -84,6 +92,28 @@ export default function RecordBudgetForm({ onSuccess }) {
 
       if (!res.ok) {
         throw new Error(responseData?.message || 'Failed to add budget');
+      }
+
+      if (deduct) {
+        console.log('✅ Deduct from income');
+        const res = await fetch('/api/incomes/deduction', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: data.totalBudget }),
+        });
+
+        const responseData = await res.json();
+
+        if (!res.ok) {
+          throw new Error(
+            responseData?.message || 'Failed to deduct from income'
+          );
+        }
+
+        toast.success(responseData.message);
+      } else {
+        console.log('🚫 Do not deduct');
+        // proceed without deduction
       }
 
       toast.success('Budget Recorded!');
@@ -216,6 +246,15 @@ export default function RecordBudgetForm({ onSuccess }) {
                   </Field>
                 )}
               />
+
+              <div className="flex gap-3">
+                <Checkbox
+                  id="deduct"
+                  checked={deduct}
+                  onCheckedChange={setDeduct}
+                />
+                <Label>Deduct this budget from my total income</Label>
+              </div>
 
               <Field>
                 <Button type="submit" disabled={isLoading} className="w-full">

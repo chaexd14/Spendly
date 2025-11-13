@@ -87,6 +87,7 @@ model Income {
   incomeTitle        String   @map("(income_title)")
   incomeSource       String   @map("income_source")
   incomeAmount       Int      @map("income_amount")
+  deductionType      String?  @map("deduction_type")
   incomeDateReceived DateTime @map("income_date_received")
   createdAt          DateTime @default(now())
 

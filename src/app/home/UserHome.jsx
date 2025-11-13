@@ -94,22 +94,6 @@ export default function UserHome({
       )}
 
       {/* Budgets */}
-      <div>
-        <h2>Your Budgets</h2>
-        {loading.budgets ? (
-          <p>Loading...</p>
-        ) : (
-          budgets.map((b) => (
-            <p key={b.budgetId}>
-              {b.budgetPeriodType} — {b.totalBudget} — Remaining:{' '}
-              {b.remainingBudget}
-            </p>
-          ))
-        )}
-        <button onClick={refreshBudgets} disabled={loading.budgets}>
-          Refresh Budgets
-        </button>
-      </div>
 
       {/* Expenses */}
       <div>
