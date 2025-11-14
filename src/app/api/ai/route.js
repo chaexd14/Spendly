@@ -1,0 +1,74 @@
+import { GoogleGenAI } from '@google/genai';
+
+// Configuration for exponential backoff retries
+const MAX_RETRIES = 5;
+const INITIAL_DELAY_MS = 1000; // 1 second
+
+// Function to delay execution
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function POST(req) {
+  try {
+    const { prompt } = await req.json();
+
+    const ai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY,
+    });
+
+    const systemInstruction =
+      "You are **Spendlly**, a friendly, non-judgmental AI financial coach for a money management app. Your expertise is in providing **actionable money management strategies and personalized financial tips**. The user is using the app's features: **Dashboard, Income, Budget, Expense, and Goals**. Ensure advice is relevant, encouraging, and easy to understand. **FORMAT RULE:** If the question requires only a definitive answer, your entire response must be a single, short sentence beginning with 'Yes,' or 'No,' followed by brief clarification. **LONG FORMAT RULE:** For all strategic/explanatory questions, your response must strictly be **one to three distinct paragraphs**, each containing **2 to 3 sentences**, separated by a double newline. **SCOPE RULE:** If the query is non-financial, politely state you can only assist with financial topics and redirect them to their goals. Never use greetings, titles, or lists. Start directly with the response.";
+
+    let response;
+    let currentDelay = INITIAL_DELAY_MS;
+
+    // --- NEW: Exponential Backoff and Retry Loop ---
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        console.log(
+          `Attempting to generate content (Attempt ${attempt}/${MAX_RETRIES})...`
+        );
+
+        response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: prompt,
+          config: {
+            systemInstruction: systemInstruction,
+          },
+        });
+
+        // If successful, break the loop
+        return Response.json({ output: response.text });
+      } catch (error) {
+        // Check for specific retryable errors like 503 (UNAVAILABLE)
+        const errorMessage = error.message;
+        const isRetryable =
+          errorMessage.includes('503') || errorMessage.includes('UNAVAILABLE');
+
+        if (attempt === MAX_RETRIES || !isRetryable) {
+          // Re-throw if it's the last attempt or not a retryable error
+          throw error;
+        }
+
+        // Apply exponential backoff delay
+        console.log(
+          `Retryable error encountered: ${errorMessage}. Retrying in ${currentDelay / 1000}s...`
+        );
+        await delay(currentDelay);
+        currentDelay *= 2; // Double the delay for the next attempt
+      }
+    }
+    // This line should technically be unreachable if the loop is structured correctly,
+    // but included for completeness in case all retries fail.
+    return Response.json(
+      { error: 'Failed to get a response after all retries.' },
+      { status: 500 }
+    );
+    // --- END NEW LOGIC ---
+  } catch (error) {
+    // Catch errors from the model or the backoff loop
+    console.error('Final API call failure:', error.message);
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+}

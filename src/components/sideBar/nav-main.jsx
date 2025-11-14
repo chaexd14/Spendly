@@ -17,7 +17,7 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import { LayoutDashboard } from 'lucide-react';
+import { LayoutDashboard, Bot } from 'lucide-react';
 
 export function NavMain({ items }) {
   return (
@@ -32,6 +32,21 @@ export function NavMain({ items }) {
             <LayoutDashboard />
             <a href="/dashboard">
               <span>Dashboard</span>
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenu>
+      </SidebarGroup>
+
+      <SidebarGroup>
+        <SidebarGroupLabel>Ask Spendlyy</SidebarGroupLabel>
+        <SidebarMenu>
+          <SidebarMenuButton
+            tooltip="Dashboard"
+            className="px-3 py-5 text-base"
+          >
+            <Bot />
+            <a href="/dashboard/ask-spendlyy">
+              <span>Spendlyy</span>
             </a>
           </SidebarMenuButton>
         </SidebarMenu>

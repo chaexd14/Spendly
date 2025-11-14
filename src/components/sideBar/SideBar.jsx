@@ -9,14 +9,21 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarRail,
-  useSidebar, // ✅ Import this
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { LogOut } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Spinner } from '../ui/spinner';
 import { NavMain } from './nav-main';
 import { NavUser } from './nav-user';
-import { Wallet, PiggyBank, Banknote, CreditCard, Target } from 'lucide-react';
+import {
+  Wallet,
+  PiggyBank,
+  Banknote,
+  CreditCard,
+  Target,
+  BotMessageSquare,
+} from 'lucide-react';
 import { Collapsible, CollapsibleTrigger } from '../ui/collapsible';
 
 export function SideBar({ session }) {
