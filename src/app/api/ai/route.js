@@ -1,10 +1,8 @@
 import { GoogleGenAI } from '@google/genai';
 
-// Configuration for exponential backoff retries
 const MAX_RETRIES = 5;
-const INITIAL_DELAY_MS = 1000; // 1 second
+const INITIAL_DELAY_MS = 1000;
 
-// Function to delay execution
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -23,7 +21,6 @@ export async function POST(req) {
     let response;
     let currentDelay = INITIAL_DELAY_MS;
 
-    // --- NEW: Exponential Backoff and Retry Loop ---
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
       try {
         console.log(
@@ -38,36 +35,29 @@ export async function POST(req) {
           },
         });
 
-        // If successful, break the loop
         return Response.json({ output: response.text });
       } catch (error) {
-        // Check for specific retryable errors like 503 (UNAVAILABLE)
         const errorMessage = error.message;
         const isRetryable =
           errorMessage.includes('503') || errorMessage.includes('UNAVAILABLE');
 
         if (attempt === MAX_RETRIES || !isRetryable) {
-          // Re-throw if it's the last attempt or not a retryable error
           throw error;
         }
 
-        // Apply exponential backoff delay
         console.log(
           `Retryable error encountered: ${errorMessage}. Retrying in ${currentDelay / 1000}s...`
         );
         await delay(currentDelay);
-        currentDelay *= 2; // Double the delay for the next attempt
+        currentDelay *= 2;
       }
     }
-    // This line should technically be unreachable if the loop is structured correctly,
-    // but included for completeness in case all retries fail.
+
     return Response.json(
       { error: 'Failed to get a response after all retries.' },
       { status: 500 }
     );
-    // --- END NEW LOGIC ---
   } catch (error) {
-    // Catch errors from the model or the backoff loop
     console.error('Final API call failure:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
