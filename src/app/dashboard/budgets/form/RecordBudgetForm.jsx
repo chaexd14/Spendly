@@ -95,7 +95,6 @@ export default function RecordBudgetForm({ onSuccess }) {
       }
 
       if (deduct) {
-        console.log('✅ Deduct from income');
         const res = await fetch('/api/incomes/deduction', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
