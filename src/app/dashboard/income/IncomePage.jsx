@@ -16,6 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 
 import RecordIncomeForm from './forms/RecordIncomeForm';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Icon
 import { TrendingUp } from 'lucide-react';

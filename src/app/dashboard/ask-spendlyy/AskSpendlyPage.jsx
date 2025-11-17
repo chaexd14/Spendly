@@ -85,7 +85,7 @@ export default function AskSpendlyPage({ session }) {
           </div>
         )}
 
-        <ScrollArea>
+        <ScrollArea className="h-[400px]">
           <div className="grid grid-cols-1 gap-3">
             {messages.map((msg, index) => (
               <div key={index} className="p-3 border rounded">
