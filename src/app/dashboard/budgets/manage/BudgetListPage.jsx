@@ -45,7 +45,7 @@ export default function BudgetListPage({ userBudgets }) {
         <div className="grid grid-cols-3 gap-5">
           {data.map((d) => (
             <Card key={d.title} className="flex flex-col w-full">
-              <CardHeader className="py-3">
+              <CardHeader className="py-5">
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="text-lg">
@@ -62,9 +62,9 @@ export default function BudgetListPage({ userBudgets }) {
 
               <Separator />
 
-              <CardContent className="py-3">
+              <CardContent className="py-5">
                 <div className="flex items-baseline justify-center">
-                  <CardTitle className="text-2xl">
+                  <CardTitle className="text-4xl">
                     ₱ {d.remainingBudget}
                   </CardTitle>
                   <CardDescription className="text-base">
@@ -75,18 +75,7 @@ export default function BudgetListPage({ userBudgets }) {
 
               <Separator />
 
-              <CardContent className="py-3">
-                <div className="h-[100px]">
-                  <ChartBarHorizontal
-                    budgetSum={d.totalBudget}
-                    expensesSum={d.totalExpenses}
-                  />
-                </div>
-              </CardContent>
-
-              <Separator />
-
-              <CardFooter className="gap-5 py-3">
+              <CardFooter className="gap-5 py-5">
                 <Button
                   className="w-full"
                   variant="outline"

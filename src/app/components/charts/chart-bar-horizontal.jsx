@@ -6,19 +6,23 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import React, { useMemo } from 'react';
 
-export default function ChartBarHorizontal({ budgetSum, expensesSum }) {
-  const chartData = [
-    { label: 'Total Budget', value: budgetSum },
-    { label: 'Total Expenses', value: expensesSum },
-  ];
+function ChartBarHorizontal({ budgetSum, expensesSum }) {
+  const chartData = useMemo(
+    () => [
+      { label: 'Total Budget', value: budgetSum },
+      { label: 'Total Expenses', value: expensesSum },
+    ],
+    [budgetSum, expensesSum]
+  );
 
-  const chartConfig = {
-    value: {
-      label: 'Total',
-      color: 'var(--chart-1)',
-    },
-  };
+  const chartConfig = useMemo(
+    () => ({
+      value: { label: 'Total', color: 'var(--chart-1)' },
+    }),
+    []
+  );
 
   return (
     <ResponsiveContainer>
@@ -44,3 +48,5 @@ export default function ChartBarHorizontal({ budgetSum, expensesSum }) {
     </ResponsiveContainer>
   );
 }
+
+export default React.memo(ChartBarHorizontal);
