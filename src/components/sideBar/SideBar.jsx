@@ -48,7 +48,7 @@ export function SideBar({ session }) {
       title: 'Budget',
       url: '/dashboard/budgets',
       icon: Wallet,
-      items: [{ title: 'Manage Budgets', url: '#' }],
+      items: [{ title: 'Manage Budgets', url: '/dashboard/budgets/manage' }],
     },
     {
       title: 'Expenses',

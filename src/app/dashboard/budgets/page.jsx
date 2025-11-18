@@ -13,7 +13,7 @@ export default async function page() {
   }
 
   // Fetch initial data
-  const [userBudgets] = await Promise.all([getBudget(session.user.id)]);
+  const [userBudgets] = await Promise.all([getBudget(session.user.id, 3)]);
 
   return (
     <>

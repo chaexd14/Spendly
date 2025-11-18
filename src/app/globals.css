@@ -138,43 +138,30 @@
   body {
     @apply bg-background text-foreground;
   }
-  /* Thin, rounded scrollbar */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+}
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted-foreground) / 0.4);
-    border-radius: 9999px;
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(var(--muted-foreground) / 0.6);
+  ::-webkit-scrollbar-thumb {
+    background: lightgray;
+    border-radius: 4px;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background-color: hsl(var(--background));
+  ::-webkit-scrollbar-thumb:hover {
+    background: gray;
   }
 
-  /* Firefox */
-  .custom-scrollbar {
+  * {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.4) hsl(var(--background));
-  }
-
-  /* Smooth scrolling and momentum */
-  .custom-scrollbar {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch; /* iOS momentum */
-    overscroll-behavior: contain; /* prevents scroll chaining */
-  }
-
-  /* Optional: smoother momentum for Windows */
-  @media (pointer: fine) {
-    .custom-scrollbar {
-      scroll-snap-type: y proximity; /* makes scroll feel less jumpy */
-      scroll-padding-top: 0;
-    }
+    scrollbar-color: lightgray transparent;
   }
 }

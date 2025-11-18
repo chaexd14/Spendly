@@ -14,6 +14,8 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 
+import { useRouter } from 'next/navigation';
+
 import { useCallback, useState } from 'react';
 
 // Form
@@ -23,6 +25,7 @@ import RecordBudgetForm from './form/RecordBudgetForm';
 import ChartBarHorizontal from '@/app/components/charts/chart-bar-horizontal';
 
 export default function BudgetPage({ userBudgets }) {
+  const router = useRouter();
   const [budgets, setbudgets] = useState(userBudgets.budgets);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,6 +34,7 @@ export default function BudgetPage({ userBudgets }) {
   const [expensesSum, setExpensesSum] = useState(userBudgets.totalExpensesSum);
 
   const data = budgets.map((b) => ({
+    id: b.budgetId,
     title: b.budgetTitle,
     periodType: b.budgetPeriodType,
     totalBudget: b.totalBudget,
@@ -49,7 +53,7 @@ export default function BudgetPage({ userBudgets }) {
   const refreshBudget = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/budgets');
+      const res = await fetch('/api/budgets?limit=3');
       if (!res.ok) throw new Error('Failed to fetch budgets');
       const data = await res.json();
       setbudgets(data.budgets);
@@ -67,42 +71,39 @@ export default function BudgetPage({ userBudgets }) {
     <div className="grid grid-cols-3 gap-5">
       {/* Budget Cards */}
       <div className="col-span-3">
-        <ScrollArea>
-          <div className="flex gap-5 mb-5">
-            {data.map((d) => (
-              <Card key={d.title} className="flex flex-col w-[330px]">
-                <CardHeader className="py-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-lg">
-                        Budget for {d.title}
-                      </CardTitle>
-                      <CardDescription className="text-xs">
-                        Active from <span>{d.startDate}</span> to{' '}
-                        <span>{d.endDate}</span>
-                      </CardDescription>
-                    </div>
-                    <Badge className="">{d.periodType}</Badge>
-                  </div>
-                </CardHeader>
-
-                <Separator />
-
-                <CardContent className="py-4">
-                  <div className="flex items-baseline justify-center">
-                    <CardTitle className="text-2xl">
-                      ₱ {d.remainingBudget}
+        <div className="flex gap-5">
+          {data.map((d) => (
+            <Card key={d.title} className="flex flex-col w-full">
+              <CardHeader className="py-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-lg">
+                      Budget for {d.title}
                     </CardTitle>
-                    <CardDescription className="text-base">
-                      / {d.totalBudget}
+                    <CardDescription className="text-xs">
+                      Active from <span>{d.startDate}</span> to{' '}
+                      <span>{d.endDate}</span>
                     </CardDescription>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" />
-        </ScrollArea>
+                  <Badge className="">{d.periodType}</Badge>
+                </div>
+              </CardHeader>
+
+              <Separator />
+
+              <CardContent className="py-5">
+                <div className="flex items-baseline justify-center">
+                  <CardTitle className="text-3xl">
+                    ₱ {d.remainingBudget}
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    / {d.totalBudget}
+                  </CardDescription>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Form */}
@@ -119,7 +120,7 @@ export default function BudgetPage({ userBudgets }) {
           <CardHeader className="py-5">
             <CardTitle>Budget Analysis</CardTitle>
             <CardDescription>
-              Visual summary of your budget and expenses.
+              Total summary of your budgets and expenses.
             </CardDescription>
           </CardHeader>
 

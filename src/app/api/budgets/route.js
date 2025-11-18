@@ -29,7 +29,12 @@ export async function GET(req) {
   const session = await auth.api.getSession({ headers: req.headers });
   if (!session) return new Response('Unauthorized', { status: 401 });
 
-  const budgets = await getBudget(session.user.id);
+  const { searchParams } = new URL(req.url);
+  const limit = searchParams.has('limit')
+    ? parseInt(searchParams.get('limit'))
+    : undefined;
+
+  const budgets = await getBudget(session.user.id, limit);
 
   return new Response(JSON.stringify(budgets), {
     headers: { 'Content-Type': 'application/json' },
