@@ -14,8 +14,16 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
+// Table
+import { BudgetColumns } from './table/BudgetColumns';
+import { DataTable } from '../../income/table/data-table';
+
+// Icon
+import { LayoutList } from 'lucide-react';
+
 export default function BudgetListPage({ userBudgets }) {
   const [budgets, setbudgets] = useState(userBudgets.budgets);
+  const [isTable, setIsTable] = useState(true);
 
   const data = budgets.map((b) => ({
     id: b.budgetId,
@@ -36,67 +44,94 @@ export default function BudgetListPage({ userBudgets }) {
   }));
 
   return (
-    <>
-      <ScrollArea className="h-full">
-        <div className="grid grid-cols-3 gap-5">
-          {data.map((d) => (
-            <Card key={d.title} className="flex flex-col w-full">
-              <CardHeader className="py-5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-lg">
-                      Budget for {d.title}
+    <div className="flex flex-col gap-5">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between p-5">
+          <div>
+            <CardTitle className="text-2xl">Budget List</CardTitle>
+            <CardDescription>
+              See your budgets and make changes anytime.
+            </CardDescription>
+          </div>
+
+          <Button variant="outline" onClick={() => setIsTable((prev) => !prev)}>
+            <LayoutList />
+          </Button>
+        </CardHeader>
+
+        {isTable && (
+          <>
+            <Separator />
+
+            <CardContent className="p-5">
+              <DataTable columns={BudgetColumns} data={data} />
+            </CardContent>
+          </>
+        )}
+      </Card>
+
+      {!isTable && (
+        <ScrollArea className="h-full">
+          <div className="grid grid-cols-3 gap-5">
+            {data.map((d) => (
+              <Card key={d.title} className="flex flex-col w-full">
+                <CardHeader className="py-5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg">
+                        Budget for {d.title}
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Active from <span>{d.startDate}</span> to{' '}
+                        <span>{d.endDate}</span>
+                      </CardDescription>
+                    </div>
+                    <Badge className="">{d.periodType}</Badge>
+                  </div>
+                </CardHeader>
+
+                <Separator />
+
+                <CardContent className="py-5">
+                  <div className="flex items-baseline justify-center">
+                    <CardTitle className="text-4xl">
+                      ₱ {d.remainingBudget}
                     </CardTitle>
-                    <CardDescription className="text-xs">
-                      Active from <span>{d.startDate}</span> to{' '}
-                      <span>{d.endDate}</span>
+                    <CardDescription className="text-base">
+                      / {d.totalBudget}
                     </CardDescription>
                   </div>
-                  <Badge className="">{d.periodType}</Badge>
-                </div>
-              </CardHeader>
+                </CardContent>
 
-              <Separator />
+                <Separator />
 
-              <CardContent className="py-5">
-                <div className="flex items-baseline justify-center">
-                  <CardTitle className="text-4xl">
-                    ₱ {d.remainingBudget}
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    / {d.totalBudget}
-                  </CardDescription>
-                </div>
-              </CardContent>
+                <CardFooter className="gap-5 py-5">
+                  <Button
+                    className="w-full"
+                    variant="outline"
+                    onClick={() =>
+                      router.push(`/dashboard/budgets/manage/${d.id}`)
+                    }
+                  >
+                    Edit
+                  </Button>
 
-              <Separator />
-
-              <CardFooter className="gap-5 py-5">
-                <Button
-                  className="w-full"
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/budgets/manage/${d.id}`)
-                  }
-                >
-                  Edit
-                </Button>
-
-                <Button
-                  className="w-full"
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/budgets/manage/${d.id}`)
-                  }
-                >
-                  Delete
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
-    </>
+                  <Button
+                    className="w-full"
+                    variant="outline"
+                    onClick={() =>
+                      router.push(`/dashboard/budgets/manage/${d.id}`)
+                    }
+                  >
+                    Delete
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      )}
+    </div>
   );
 }
