@@ -5,18 +5,14 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import ChartBarHorizontal from '@/app/components/charts/chart-bar-horizontal';
 
 export default function BudgetListPage({ userBudgets }) {
   const [budgets, setbudgets] = useState(userBudgets.budgets);
