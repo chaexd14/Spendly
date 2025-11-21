@@ -44,7 +44,7 @@ export default function BudgetListPage({ userBudgets }) {
   }));
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col h-full gap-5">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between p-5">
           <div>
@@ -71,8 +71,8 @@ export default function BudgetListPage({ userBudgets }) {
       </Card>
 
       {!isTable && (
-        <ScrollArea className="h-full">
-          <div className="grid grid-cols-3 gap-5">
+        <ScrollArea className="flex-1">
+          <div className="grid h-full grid-cols-3 gap-5">
             {data.map((d) => (
               <Card key={d.title} className="flex flex-col w-full">
                 <CardHeader className="py-5">

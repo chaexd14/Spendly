@@ -7,6 +7,9 @@ import {
 import { getSessionWithRole } from '../../../lib/session';
 import { redirect } from 'next/navigation';
 import { Toaster } from '@/components/ui/sonner';
+import { Separator } from '@/components/ui/separator';
+
+import Header from '../components/header/Header';
 
 export default async function Layout({ children }) {
   const session = await getSessionWithRole();
@@ -25,11 +28,7 @@ export default async function Layout({ children }) {
           {/* Main Content */}
           <div className="flex flex-col flex-1">
             {/* Header */}
-            <header className="sticky top-0 z-10 bg-white border-b">
-              <div className="flex items-center gap-2 p-4">
-                <SidebarTrigger />
-              </div>
-            </header>
+            <Header />
 
             {/* Content */}
             <main className="flex-1 p-5">

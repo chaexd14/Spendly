@@ -66,92 +66,106 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="grid grid-cols-1 grid-rows-2 gap-5 lg:grid-cols-4 lg:grid-rows-1">
-        <Card className="flex flex-col items-center justify-between lg:col-span-3">
-          <CardHeader className="w-full py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="lg:text-2xl">Total Income</CardTitle>
-                <CardDescription>As of June 2025</CardDescription>
+      <Card>
+        <CardHeader>
+          <div>
+            <CardTitle className="text-2xl">Income</CardTitle>
+            <CardDescription>
+              Add and manage your income, track your progress over time, and
+              review your income history at a glance.
+            </CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
+
+      <div className="flex flex-col gap-5">
+        <div className="grid grid-cols-1 grid-rows-2 gap-5 lg:grid-cols-4 lg:grid-rows-1">
+          <Card className="flex flex-col items-center justify-between lg:col-span-3">
+            <CardHeader className="w-full py-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="lg:text-2xl">Total Income</CardTitle>
+                  <CardDescription>As of June 2025</CardDescription>
+                </div>
+                <Badge
+                  className="gap-2 text-sm text-muted-foreground"
+                  variant="outline"
+                >
+                  <TrendingUp size={16} />{' '}
+                  {loading.totalIncome ? (
+                    <span>...%</span>
+                  ) : (
+                    <span>{totalIncome.growthPercentage}%</span>
+                  )}
+                </Badge>
               </div>
-              <Badge
-                className="gap-2 text-sm text-muted-foreground"
-                variant="outline"
-              >
-                <TrendingUp size={16} />{' '}
-                {loading.totalIncome ? (
-                  <span>...%</span>
-                ) : (
-                  <span>{totalIncome.growthPercentage}%</span>
-                )}
-              </Badge>
-            </div>
-          </CardHeader>
+            </CardHeader>
 
-          <Separator />
+            <Separator />
 
-          <CardContent className="w-full h-full py-0">
-            <div className="grid h-full grid-rows-2 lg:grid-cols-6 lg:grid-rows-1">
-              <div className="flex items-center justify-between w-full gap-5 lg:col-span-2">
-                <div className="flex flex-col items-center justify-center w-full gap-3">
-                  <CardTitle className="text-5xl lg:text-6xl">
-                    {loading.totalIncome ? (
-                      <span>₱...</span>
-                    ) : (
-                      <span>₱{totalIncome.totalIncome}</span>
-                    )}
-                  </CardTitle>
+            <CardContent className="w-full h-full py-0">
+              <div className="grid h-full grid-rows-2 lg:grid-cols-6 lg:grid-rows-1">
+                <div className="flex items-center justify-between w-full gap-5 lg:col-span-2">
+                  <div className="flex flex-col items-center justify-center w-full gap-3">
+                    <CardTitle className="text-5xl lg:text-6xl">
+                      {loading.totalIncome ? (
+                        <span>₱...</span>
+                      ) : (
+                        <span>₱{totalIncome.totalIncome}</span>
+                      )}
+                    </CardTitle>
 
-                  <CardDescription className="text-xs lg:text-sm">
-                    {loading.totalIncome ? (
-                      <span>₱... </span>
-                    ) : (
-                      <span>+₱{totalIncome.latestIncomeRecord} </span>
-                    )}
-                    from last record
-                  </CardDescription>
+                    <CardDescription className="text-xs lg:text-sm">
+                      {loading.totalIncome ? (
+                        <span>₱... </span>
+                      ) : (
+                        <span>+₱{totalIncome.latestIncomeRecord} </span>
+                      )}
+                      from last record
+                    </CardDescription>
+                  </div>
+
+                  {!isMobile && <Separator orientation="vertical" />}
                 </div>
 
-                {!isMobile && <Separator orientation="vertical" />}
+                <div className="py-3 pr-0 lg:col-start-3 lg:col-span-4 lg:pl-6">
+                  <ChartLineLinear incomes={incomes} />
+                </div>
               </div>
+            </CardContent>
 
-              <div className="py-3 pr-0 lg:col-start-3 lg:col-span-4 lg:pl-6">
-                <ChartLineLinear incomes={incomes} />
-              </div>
-            </div>
-          </CardContent>
+            <Separator />
 
-          <Separator />
+            <CardFooter className="w-full py-4">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => {
+                  refreshTotalIncome();
+                  refreshIncomes();
+                }}
+              >
+                {loading.totalIncome ? (
+                  <span>Refreshing...</span>
+                ) : (
+                  <span>Refresh</span>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
 
-          <CardFooter className="w-full py-4">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => {
-                refreshTotalIncome();
-                refreshIncomes();
-              }}
-            >
-              {loading.totalIncome ? (
-                <span>Refreshing...</span>
-              ) : (
-                <span>Refresh</span>
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
+          <RecordIncomeForm
+            className="w-full"
+            onSuccess={() => {
+              refreshIncomes();
+              refreshTotalIncome();
+            }}
+          />
+        </div>
 
-        <RecordIncomeForm
-          className="w-full"
-          onSuccess={() => {
-            refreshIncomes();
-            refreshTotalIncome();
-          }}
-        />
-      </div>
-
-      <div>
-        <DataTable columns={Columns} data={incomes} />
+        <div>
+          <DataTable columns={Columns} data={incomes} />
+        </div>
       </div>
     </div>
   );

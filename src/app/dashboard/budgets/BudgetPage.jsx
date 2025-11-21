@@ -68,93 +68,107 @@ export default function BudgetPage({ userBudgets }) {
   };
 
   return (
-    <div className="grid grid-cols-3 gap-5">
-      {/* Budget Cards */}
-      <div className="col-span-3">
-        <div className="flex gap-5">
-          {data.map((d) => (
-            <Card key={d.title} className="flex flex-col w-full">
-              <CardHeader className="py-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-lg">
-                      Budget for {d.title}
+    <div className="flex flex-col gap-5">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between p-5">
+          <div>
+            <CardTitle className="text-2xl">Budgets</CardTitle>
+            <CardDescription>
+              Create and manage your budgets, view recent entries, and track
+              your spending with clear insights.
+            </CardDescription>
+          </div>
+        </CardHeader>
+      </Card>
+
+      <div className="grid grid-cols-3 gap-5">
+        {/* Budget Cards */}
+        <div className="col-span-3">
+          <div className="flex gap-5">
+            {data.map((d) => (
+              <Card key={d.title} className="flex flex-col w-full">
+                <CardHeader className="py-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg">
+                        Budget for {d.title}
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Active from <span>{d.startDate}</span> to{' '}
+                        <span>{d.endDate}</span>
+                      </CardDescription>
+                    </div>
+                    <Badge className="">{d.periodType}</Badge>
+                  </div>
+                </CardHeader>
+
+                <Separator />
+
+                <CardContent className="py-5">
+                  <div className="flex items-baseline justify-center">
+                    <CardTitle className="text-3xl">
+                      ₱ {d.remainingBudget}
                     </CardTitle>
-                    <CardDescription className="text-xs">
-                      Active from <span>{d.startDate}</span> to{' '}
-                      <span>{d.endDate}</span>
+                    <CardDescription className="text-base">
+                      / {d.totalBudget}
                     </CardDescription>
                   </div>
-                  <Badge className="">{d.periodType}</Badge>
-                </div>
-              </CardHeader>
-
-              <Separator />
-
-              <CardContent className="py-5">
-                <div className="flex items-baseline justify-center">
-                  <CardTitle className="text-3xl">
-                    ₱ {d.remainingBudget}
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    / {d.totalBudget}
-                  </CardDescription>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Form */}
-      <div className="col-span-3 row-start-3 lg:col-start-1 lg:row-start-2 lg:col-span-1">
-        <RecordBudgetForm
-          onSuccess={() => {
-            refreshBudget();
-          }}
-        />
-      </div>
+        {/* Form */}
+        <div className="col-span-3 row-start-3 lg:col-start-1 lg:row-start-2 lg:col-span-1">
+          <RecordBudgetForm
+            onSuccess={() => {
+              refreshBudget();
+            }}
+          />
+        </div>
 
-      <div className="col-span-3 row-start-2 lg:col-span-2 lg:col-start-2 lg:row-start-2 h-[300px] lg:h-full">
-        <Card className="flex flex-col justify-between w-full h-full">
-          <CardHeader className="py-5">
-            <CardTitle>Budget Analysis</CardTitle>
-            <CardDescription>
-              Total summary of your budgets and expenses.
-            </CardDescription>
-          </CardHeader>
+        <div className="col-span-3 row-start-2 lg:col-span-2 lg:col-start-2 lg:row-start-2 h-[300px] lg:h-full">
+          <Card className="flex flex-col justify-between w-full h-full">
+            <CardHeader className="py-5">
+              <CardTitle>Budget Analysis</CardTitle>
+              <CardDescription>
+                Total summary of your budgets and expenses.
+              </CardDescription>
+            </CardHeader>
 
-          <Separator />
+            <Separator />
 
-          <CardContent className="flex-1 py-5">
-            <ChartBarHorizontal
-              budgetSum={budgetSum}
-              expensesSum={expensesSum}
-            />
-          </CardContent>
+            <CardContent className="flex-1 py-5">
+              <ChartBarHorizontal
+                budgetSum={budgetSum}
+                expensesSum={expensesSum}
+              />
+            </CardContent>
 
-          <Separator />
+            <Separator />
 
-          <CardFooter className="py-5">
-            <Button
-              variant="outline"
-              className="w-full"
-              disabled={loading}
-              onClick={() => {
-                refreshBudget();
-              }}
-            >
-              {loading ? (
-                <>
-                  <Spinner />
-                  <span>Refreshing...</span>
-                </>
-              ) : (
-                <span>Refresh</span>
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
+            <CardFooter className="py-5">
+              <Button
+                variant="outline"
+                className="w-full"
+                disabled={loading}
+                onClick={() => {
+                  refreshBudget();
+                }}
+              >
+                {loading ? (
+                  <>
+                    <Spinner />
+                    <span>Refreshing...</span>
+                  </>
+                ) : (
+                  <span>Refresh</span>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
       </div>
     </div>
   );
