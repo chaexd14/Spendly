@@ -1,9 +1,9 @@
-import React from 'react';
+import ExpensesPage from './ExpensesPage';
 
 export default function page() {
   return (
-    <div>
-      <h1>expenses</h1>
-    </div>
+    <>
+      <ExpensesPage />
+    </>
   );
 }

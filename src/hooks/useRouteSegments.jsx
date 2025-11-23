@@ -9,7 +9,7 @@ export default function useRouteSegments() {
   const rawSegments = pathname.split('/').filter(Boolean);
 
   return rawSegments.map((seg) => ({
-    raw: seg, // "dashboard"
-    title: seg.charAt(0).toUpperCase() + seg.slice(1), // "Dashboard"
+    raw: seg,
+    title: seg.charAt(0).toUpperCase() + seg.slice(1),
   }));
 }
