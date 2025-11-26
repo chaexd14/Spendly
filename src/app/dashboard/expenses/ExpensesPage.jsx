@@ -7,10 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+
+import RecordExpensesForm from './form/RecordExpensesForm';
+import { ChartPieLegend } from '@/app/components/charts/chart-pie-legend';
+import { Button } from '@/components/ui/button';
 
 export default function ExpensesPage() {
   return (
-    <div>
+    <div className="grid gap-5">
       <Card>
         <CardHeader>
           <div>
@@ -22,6 +27,37 @@ export default function ExpensesPage() {
           </div>
         </CardHeader>
       </Card>
+
+      <div className="grid grid-cols-5 gap-5">
+        <div className="col-span-2">
+          <RecordExpensesForm />
+        </div>
+
+        <div className="col-span-3 col-start-3">
+          <Card className="flex flex-col justify-between w-full h-full">
+            <CardHeader className="py-5">
+              <CardTitle>Expenses Breakdown</CardTitle>
+              <CardDescription>
+                Visual overview of your spending across all categories.
+              </CardDescription>
+            </CardHeader>
+
+            <Separator />
+
+            <CardContent className="flex-1">
+              <ChartPieLegend />
+            </CardContent>
+
+            <Separator />
+
+            <CardFooter className="py-5">
+              <Button className="w-full" variant="outline">
+                Refresh
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
