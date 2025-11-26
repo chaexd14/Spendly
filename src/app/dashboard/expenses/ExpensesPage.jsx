@@ -49,12 +49,6 @@ export default function ExpensesPage() {
             </CardContent>
 
             <Separator />
-
-            <CardFooter className="py-5">
-              <Button className="w-full" variant="outline">
-                Refresh
-              </Button>
-            </CardFooter>
           </Card>
         </div>
       </div>

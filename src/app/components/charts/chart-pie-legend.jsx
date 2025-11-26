@@ -12,6 +12,8 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart';
@@ -57,10 +59,43 @@ export function ChartPieLegend() {
     <ResponsiveContainer>
       <ChartContainer config={chartConfig} className="mx-auto">
         <PieChart>
-          <Pie data={chartData} dataKey="visitors" />
+          <ChartTooltip
+            content={<ChartTooltipContent nameKey="visitors" hideLabel />}
+          />
+          <Pie
+            data={chartData}
+            dataKey="visitors"
+            labelLine={false}
+            label={({ payload, ...props }) => {
+              return (
+                <text
+                  cx={props.cx}
+                  cy={props.cy}
+                  x={props.x}
+                  y={props.y}
+                  textAnchor={props.textAnchor}
+                  dominantBaseline={props.dominantBaseline}
+                  fill="hsla(var(--foreground))"
+                >
+                  {payload.visitors}
+                </text>
+              );
+            }}
+            nameKey="browser"
+          />
+
           <ChartLegend
-            content={<ChartLegendContent nameKey="browser" />}
-            className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+            layout="vertical"
+            align="right"
+            verticalAlign="middle"
+            content={
+              <ChartLegendContent
+                nameKey="browser"
+                data={chartData}
+                config={chartConfig.browser}
+              />
+            }
+            className="flex flex-col items-start justify-center p-0 mr-[80px] text-base"
           />
         </PieChart>
       </ChartContainer>
