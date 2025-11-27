@@ -12,6 +12,16 @@ import {
   TableCell,
   TableHead,
 } from '@/components/ui/table';
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
 import { DataTablePagination } from './DataTablePagination';
 
 export function DataTable({ columns, data }) {
@@ -25,7 +35,7 @@ export function DataTable({ columns, data }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="overflow-hidden border rounded-md">
+      <Card className="overflow-hidden">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -69,7 +79,7 @@ export function DataTable({ columns, data }) {
             )}
           </TableBody>
         </Table>
-      </div>
+      </Card>
 
       <div>
         <DataTablePagination table={table} />

@@ -32,8 +32,6 @@ export default function ChartLineLinear({ incomes }) {
     amount: i.incomeAmount,
   }));
 
-  console.log(chartData);
-
   return (
     <ResponsiveContainer>
       <ChartContainer config={chartConfig}>

@@ -58,17 +58,13 @@ export default function BudgetListPage({ userBudgets }) {
             <LayoutList />
           </Button>
         </CardHeader>
-
-        {isTable && (
-          <>
-            <Separator />
-
-            <CardContent className="p-5">
-              <DataTable columns={BudgetColumns} data={data} />
-            </CardContent>
-          </>
-        )}
       </Card>
+
+      {isTable && (
+        <>
+          <DataTable columns={BudgetColumns} data={data} />
+        </>
+      )}
 
       {!isTable && (
         <ScrollArea className="flex-1">

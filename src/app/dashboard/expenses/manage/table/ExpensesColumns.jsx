@@ -13,19 +13,13 @@ import { Separator } from '@/components/ui/separator';
 
 import { Ellipsis } from 'lucide-react';
 
-export const BudgetColumns = [
-  { accessorKey: 'title', header: 'Title' },
-  { accessorKey: 'periodType', header: 'Period Type' },
-  { accessorKey: 'totalBudget', header: 'Budget' },
-  { accessorKey: 'remainingBudget', header: 'Remaning' },
+export const ExpensesColumns = [
+  { accessorKey: 'expenseTitle', header: 'Title' },
+  { accessorKey: 'expenseCategory', header: 'Category' },
+  { accessorKey: 'expenseAmount', header: 'Amount' },
   {
-    accessorKey: 'startDate',
-    header: 'Start',
-    cell: ({ getValue }) => new Date(getValue()).toLocaleDateString(),
-  },
-  {
-    accessorKey: 'endDate',
-    header: 'End',
+    accessorKey: 'expenseDate',
+    header: 'Date',
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString(),
   },
   {

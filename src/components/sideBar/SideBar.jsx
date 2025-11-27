@@ -54,10 +54,7 @@ export function SideBar({ session }) {
       title: 'Expenses',
       url: '/dashboard/expenses',
       icon: CreditCard,
-      items: [
-        { title: 'Add Expense', url: '#' },
-        { title: 'Expense History', url: '#' },
-      ],
+      items: [{ title: 'Expense History', url: '/dashboard/expenses/manage' }],
     },
     {
       title: 'Goals',
