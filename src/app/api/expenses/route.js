@@ -4,19 +4,57 @@ import {
   getExpenses,
 } from '../../../../lib/actions/expenses-actions';
 
-export async function POST(req) {
-  const session = await auth.api.getSession({ headers: req.headers });
-  if (!session) return new Response('Unauthorized', { status: 401 });
+import { headers } from 'next/headers';
 
-  const { title, category, description, amount, date } = await req.json();
+export async function POST(req) {
+  console.time('getSession');
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  console.timeEnd('getSession');
+
+  if (!session?.user?.id) {
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized. Please log in.' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  const {
+    budgetId,
+    expenseTitle,
+    expenseCategory,
+    expenseDescription,
+    expenseAmount,
+    expenseDate,
+  } = await req.json();
+
+  if (!expenseTitle || !expenseCategory || !expenseAmount || !expenseDate) {
+    return new Response(
+      JSON.stringify({ message: 'Missing required fields' }),
+      { status: 400, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  const parsedAmount = Number(expenseAmount);
+
+  if (isNaN(parsedAmount) || parsedAmount <= 0) {
+    return new Response(JSON.stringify({ message: 'Invalid expense amount' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   const expense = await addExpenses(
     session.user.id,
-    title,
-    category,
-    description,
-    Number(amount),
-    new Date(date)
+    budgetId,
+    expenseTitle,
+    expenseCategory,
+    expenseDescription,
+    parsedAmount,
+    new Date(expenseDate)
   );
 
   return new Response(JSON.stringify(expense), {
@@ -26,8 +64,13 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-  const session = await auth.api.getSession({ headers: req.headers });
-  if (!session) return new Response('Unauthorized', { status: 401 });
+  const session = await auth.api.getSession({
+    headers: req.headers,
+  });
+
+  if (!session?.user?.id) {
+    return new Response('Unauthorized', { status: 401 });
+  }
 
   const expense = await getExpenses(session.user.id);
 

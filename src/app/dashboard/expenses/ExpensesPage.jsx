@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardAction,
@@ -12,8 +14,16 @@ import { Separator } from '@/components/ui/separator';
 import RecordExpensesForm from './form/RecordExpensesForm';
 import { ChartPieLegend } from '@/app/components/charts/chart-pie-legend';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
-export default function ExpensesPage() {
+export default function ExpensesPage({ userBudgets }) {
+  const [budgets, setbudgets] = useState(userBudgets.budgets);
+
+  const data = budgets.map((b) => ({
+    id: b.budgetId,
+    title: b.budgetTitle,
+  }));
+
   return (
     <div className="grid gap-5">
       <Card>
@@ -30,7 +40,7 @@ export default function ExpensesPage() {
 
       <div className="grid grid-cols-5 gap-5">
         <div className="col-span-2">
-          <RecordExpensesForm />
+          <RecordExpensesForm budgets={data} />
         </div>
 
         <div className="col-span-3 col-start-3">
