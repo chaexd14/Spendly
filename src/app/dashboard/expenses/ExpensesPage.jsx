@@ -16,7 +16,7 @@ import { ChartPieLegend } from '@/app/components/charts/chart-pie-legend';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
-export default function ExpensesPage({ userBudgets }) {
+export default function ExpensesPage({ userBudgets, expensesCategory }) {
   const [budgets, setbudgets] = useState(userBudgets.budgets);
 
   const data = budgets.map((b) => ({
@@ -55,7 +55,10 @@ export default function ExpensesPage({ userBudgets }) {
             <Separator />
 
             <CardContent className="flex-1">
-              <ChartPieLegend />
+              <ChartPieLegend
+                budgets={data}
+                expensesCategory={expensesCategory}
+              />
             </CardContent>
 
             <Separator />

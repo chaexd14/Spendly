@@ -2,9 +2,7 @@
 
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -12,15 +10,13 @@ import {
 import { DataTable } from '../../income/table/data-table';
 import { ExpensesColumns } from './table/ExpensesColumns';
 
-export default function ExpensesHistoryPage() {
-  const data = [
-    {
-      expenseTitle: 'Sample',
-      expenseCategory: 'Food',
-      expenseAmount: '300',
-      expenseDate: '11/27/2025',
-    },
-  ];
+export default function ExpensesHistoryPage({ userExpenses }) {
+  const data = userExpenses.map((expenses) => ({
+    expenseTitle: expenses.expenseTitle,
+    expenseCategory: expenses.expenseCategory,
+    expenseAmount: expenses.expenseAmount,
+    expenseDate: new Date(expenses.expenseDate),
+  }));
 
   return (
     <div className="grid gap-5">

@@ -90,11 +90,11 @@ export default function BudgetListPage({ userBudgets }) {
 
                 <CardContent className="py-5">
                   <div className="flex items-baseline justify-center">
-                    <CardTitle className="text-4xl">
-                      ₱ {d.remainingBudget}
+                    <CardTitle className="text-4xl text-blue-600">
+                      ₱ {d.remainingBudget.toLocaleString()}
                     </CardTitle>
-                    <CardDescription className="text-base">
-                      / {d.totalBudget}
+                    <CardDescription className="text-base text-green-600">
+                      / {d.totalBudget.toLocaleString()}
                     </CardDescription>
                   </div>
                 </CardContent>

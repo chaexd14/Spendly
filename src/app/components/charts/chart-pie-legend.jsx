@@ -3,14 +3,6 @@
 import { Pie, PieChart, ResponsiveContainer } from 'recharts';
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -18,53 +10,42 @@ import {
   ChartLegendContent,
 } from '@/components/ui/chart';
 
-export const description = 'A pie chart with a legend';
+export function ChartPieLegend({ expensesCategory }) {
+  const chartData = expensesCategory.map((e) => ({
+    category: e.category,
+    amount: e.total,
+    fill: `var(--color-${e.category})`,
+  }));
 
-const chartData = [
-  { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-  { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-  { browser: 'firefox', visitors: 187, fill: 'var(--color-firefox)' },
-  { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-  { browser: 'other', visitors: 90, fill: 'var(--color-other)' },
-];
+  const chartConfig = {
+    food: {
+      label: 'Food',
+      color: 'var(--chart-1)',
+    },
+    transportation: {
+      label: 'Transportation',
+      color: 'var(--chart-2)',
+    },
+    bills: {
+      label: 'Bills',
+      color: 'var(--chart-3)',
+    },
+    other: {
+      label: 'Other',
+      color: 'var(--chart-4)',
+    },
+  };
 
-const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  chrome: {
-    label: 'Chrome',
-    color: 'var(--chart-1)',
-  },
-  safari: {
-    label: 'Safari',
-    color: 'var(--chart-2)',
-  },
-  firefox: {
-    label: 'Firefox',
-    color: 'var(--chart-3)',
-  },
-  edge: {
-    label: 'Edge',
-    color: 'var(--chart-4)',
-  },
-  other: {
-    label: 'Other',
-    color: 'var(--chart-5)',
-  },
-};
-
-export function ChartPieLegend() {
   return (
     <ResponsiveContainer>
       <ChartContainer config={chartConfig} className="mx-auto">
         <PieChart>
           <ChartTooltip
-            content={<ChartTooltipContent nameKey="visitors" hideLabel />}
+            content={<ChartTooltipContent nameKey="amount" hideLabel />}
           />
           <Pie
             data={chartData}
-            dataKey="visitors"
+            dataKey="amount"
             labelLine={false}
             label={({ payload, ...props }) => {
               return (
@@ -77,11 +58,11 @@ export function ChartPieLegend() {
                   dominantBaseline={props.dominantBaseline}
                   fill="hsla(var(--foreground))"
                 >
-                  {payload.visitors}
+                  {payload.amount}
                 </text>
               );
             }}
-            nameKey="browser"
+            nameKey="category"
           />
 
           <ChartLegend
@@ -90,9 +71,9 @@ export function ChartPieLegend() {
             verticalAlign="middle"
             content={
               <ChartLegendContent
-                nameKey="browser"
+                nameKey="category"
                 data={chartData}
-                config={chartConfig.browser}
+                config={chartConfig.category}
               />
             }
             className="flex flex-col items-start justify-center p-0 mr-[80px] text-base"

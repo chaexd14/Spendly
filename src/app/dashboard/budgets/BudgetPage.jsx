@@ -33,6 +33,8 @@ export default function BudgetPage({ userBudgets }) {
   const [budgetSum, setBudgetSum] = useState(userBudgets.totalBudgetSum);
   const [expensesSum, setExpensesSum] = useState(userBudgets.totalExpensesSum);
 
+  console.log(expensesSum);
+
   const data = budgets.map((b) => ({
     id: b.budgetId,
     title: b.budgetTitle,
@@ -106,11 +108,11 @@ export default function BudgetPage({ userBudgets }) {
 
                 <CardContent className="py-5">
                   <div className="flex items-baseline justify-center">
-                    <CardTitle className="text-3xl">
-                      ₱ {d.remainingBudget}
+                    <CardTitle className="text-3xl text-blue-600">
+                      ₱ {d.remainingBudget.toLocaleString()}
                     </CardTitle>
-                    <CardDescription className="text-base">
-                      / {d.totalBudget}
+                    <CardDescription className="text-base text-green-600">
+                      / {d.totalBudget.toLocaleString()}
                     </CardDescription>
                   </div>
                 </CardContent>

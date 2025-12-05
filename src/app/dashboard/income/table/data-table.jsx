@@ -1,7 +1,7 @@
 import {
   useReactTable,
   getCoreRowModel,
-  getPaginationRowModel, // <-- add this
+  getPaginationRowModel,
   flexRender,
 } from '@tanstack/react-table';
 import {
@@ -13,14 +13,7 @@ import {
   TableHead,
 } from '@/components/ui/table';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 import { DataTablePagination } from './DataTablePagination';
 

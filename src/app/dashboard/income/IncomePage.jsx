@@ -19,7 +19,7 @@ import RecordIncomeForm from './forms/RecordIncomeForm';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Icon
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
 // Chart
 import ChartLineLinear from '@/app/components/charts/chart-line-linear';
@@ -88,15 +88,24 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
                   <CardDescription>As of June 2025</CardDescription>
                 </div>
                 <Badge
-                  className="gap-2 text-sm text-muted-foreground"
                   variant="outline"
+                  className={`gap-2 text-sm font-semibold ${
+                    totalIncome?.growthPercentage > 0
+                      ? 'text-green-600 border-green-500'
+                      : totalIncome?.growthPercentage < 0
+                        ? 'text-red-600 border-red-500'
+                        : 'text-gray-600 border-gray-400'
+                  }`}
                 >
-                  <TrendingUp size={16} />{' '}
-                  {loading.totalIncome ? (
-                    <span>...%</span>
+                  {totalIncome?.growthPercentage > 0 ? (
+                    <TrendingUp size={16} className="text-green-600" />
                   ) : (
-                    <span>{totalIncome.growthPercentage}%</span>
+                    <TrendingDown size={16} className="text-red-600" />
                   )}
+
+                  {loading.totalIncome
+                    ? '...%'
+                    : `${totalIncome.growthPercentage}%`}
                 </Badge>
               </div>
             </CardHeader>
@@ -107,11 +116,11 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
               <div className="grid h-full grid-rows-2 lg:grid-cols-6 lg:grid-rows-1">
                 <div className="flex items-center justify-between w-full gap-5 lg:col-span-2">
                   <div className="flex flex-col items-center justify-center w-full gap-3">
-                    <CardTitle className="text-5xl lg:text-6xl">
+                    <CardTitle className="text-5xl text-green-600 lg:text-6xl">
                       {loading.totalIncome ? (
                         <span>₱...</span>
                       ) : (
-                        <span>₱{totalIncome.totalIncome}</span>
+                        <span>₱{totalIncome.totalIncome.toLocaleString()}</span>
                       )}
                     </CardTitle>
 
@@ -119,7 +128,16 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
                       {loading.totalIncome ? (
                         <span>₱... </span>
                       ) : (
-                        <span>+₱{totalIncome.latestIncomeRecord} </span>
+                        <span
+                          className={
+                            totalIncome.latestIncomeRecord >= 0
+                              ? 'text-green-600'
+                              : 'text-red-600'
+                          }
+                        >
+                          {totalIncome.latestIncomeRecord >= 0 ? '+' : '-'}₱
+                          {totalIncome.latestIncomeRecord.toLocaleString()}{' '}
+                        </span>
                       )}
                       from last record
                     </CardDescription>

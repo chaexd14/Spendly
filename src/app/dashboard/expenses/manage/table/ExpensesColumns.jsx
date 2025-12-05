@@ -14,9 +14,38 @@ import { Separator } from '@/components/ui/separator';
 import { Ellipsis } from 'lucide-react';
 
 export const ExpensesColumns = [
-  { accessorKey: 'expenseTitle', header: 'Title' },
-  { accessorKey: 'expenseCategory', header: 'Category' },
-  { accessorKey: 'expenseAmount', header: 'Amount' },
+  {
+    accessorKey: 'expenseTitle',
+    header: 'Title',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      if (!value) return '';
+      return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    },
+  },
+  {
+    accessorKey: 'expenseCategory',
+    header: 'Category',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      if (!value) return '';
+      return (
+        <span className="px-3 py-1 border rounded-xl border-primary">
+          {value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: 'expenseAmount',
+    header: 'Amount',
+    cell: ({ getValue }) => {
+      const amount = Number(getValue());
+
+      const color = 'text-red-600';
+      return <span className={`${color}`}>₱ {amount.toLocaleString()}</span>;
+    },
+  },
   {
     accessorKey: 'expenseDate',
     header: 'Date',

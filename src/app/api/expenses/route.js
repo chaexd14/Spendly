@@ -7,13 +7,9 @@ import {
 import { headers } from 'next/headers';
 
 export async function POST(req) {
-  console.time('getSession');
-
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-
-  console.timeEnd('getSession');
 
   if (!session?.user?.id) {
     return new Response(
@@ -31,41 +27,32 @@ export async function POST(req) {
     expenseDate,
   } = await req.json();
 
-  if (!expenseTitle || !expenseCategory || !expenseAmount || !expenseDate) {
-    return new Response(
-      JSON.stringify({ message: 'Missing required fields' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
+  try {
+    const result = await addExpenses(
+      session.user.id,
+      budgetId,
+      expenseTitle,
+      expenseCategory,
+      expenseDescription,
+      expenseAmount,
+      expenseDate
     );
-  }
 
-  const parsedAmount = Number(expenseAmount);
-
-  if (isNaN(parsedAmount) || parsedAmount <= 0) {
-    return new Response(JSON.stringify({ message: 'Invalid expense amount' }), {
-      status: 400,
+    return new Response(JSON.stringify(result), {
       headers: { 'Content-Type': 'application/json' },
     });
+  } catch (err) {
+    console.error(err);
+    return new Response(
+      JSON.stringify({ message: 'Failed to record expense' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
   }
-
-  const expense = await addExpenses(
-    session.user.id,
-    budgetId,
-    expenseTitle,
-    expenseCategory,
-    expenseDescription,
-    parsedAmount,
-    new Date(expenseDate)
-  );
-
-  return new Response(JSON.stringify(expense), {
-    headers: { 'Content-Type': 'application/json' },
-    status: 201,
-  });
 }
 
-export async function GET(req) {
+export async function GET() {
   const session = await auth.api.getSession({
-    headers: req.headers,
+    headers: await headers(),
   });
 
   if (!session?.user?.id) {

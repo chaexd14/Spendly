@@ -14,10 +14,60 @@ import { Separator } from '@/components/ui/separator';
 import { Ellipsis } from 'lucide-react';
 
 export const BudgetColumns = [
-  { accessorKey: 'title', header: 'Title' },
-  { accessorKey: 'periodType', header: 'Period Type' },
-  { accessorKey: 'totalBudget', header: 'Budget' },
-  { accessorKey: 'remainingBudget', header: 'Remaning' },
+  {
+    accessorKey: 'title',
+    header: 'Title',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      if (!value) return '';
+      return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    },
+  },
+  {
+    accessorKey: 'periodType',
+    header: 'Period Type',
+    cell: ({ getValue }) => {
+      const value = getValue();
+      if (!value) return '';
+      return (
+        <span className="px-3 py-1 border rounded-xl border-primary">
+          {value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: 'totalBudget',
+    header: 'Budget',
+    cell: ({ getValue }) => {
+      const amount = Number(getValue());
+
+      const color = 'text-green-600';
+      return <span className={`${color} `}>₱ {amount.toLocaleString()}</span>;
+    },
+  },
+
+  {
+    accessorKey: 'remainingBudget',
+    header: 'Remaning',
+    cell: ({ getValue }) => {
+      const amount = Number(getValue());
+
+      const color = amount > 0 ? 'text-blue-600' : 'text-red-600';
+      return <span className={`${color} `}>₱ {amount.toLocaleString()}</span>;
+    },
+  },
+
+  {
+    accessorKey: 'totalExpenses',
+    header: 'Total Expenses',
+    cell: ({ getValue }) => {
+      const amount = Number(getValue());
+
+      const color = 'text-red-600';
+      return <span className={`${color} `}>₱ {amount.toLocaleString()}</span>;
+    },
+  },
   {
     accessorKey: 'startDate',
     header: 'Start',
