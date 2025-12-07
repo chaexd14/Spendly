@@ -35,6 +35,7 @@ export default function BudgetListPage({ userBudgets }) {
     startDate: new Date(b.budgetStartDate).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
+      year: 'numeric',
     }),
     endDate: new Date(b.budgetEndDate).toLocaleDateString('en-US', {
       month: 'short',
@@ -43,6 +44,7 @@ export default function BudgetListPage({ userBudgets }) {
     }),
   }));
 
+  console.log(data);
   return (
     <div className="flex flex-col h-full gap-5">
       <Card>

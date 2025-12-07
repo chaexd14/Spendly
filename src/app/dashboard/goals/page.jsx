@@ -1,9 +1,9 @@
-import React from 'react';
+import GoalPage from './GoalPage';
 
 export default function page() {
   return (
-    <div>
-      <h1>goals</h1>
-    </div>
+    <>
+      <GoalPage />
+    </>
   );
 }
