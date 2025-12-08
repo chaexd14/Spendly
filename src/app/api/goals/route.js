@@ -4,11 +4,22 @@ import { auth } from '../../../../lib/auth';
 
 // Create Goal
 export async function POST(req) {
-  const { userId, goalName, goalAmount, goalTargetDate } = await req.json();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized. Please log in.' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  const { goalName, goalAmount, goalTargetDate } = await req.json();
 
   try {
     const result = await createGoal(
-      userId,
+      session.user.id,
       goalName,
       goalAmount,
       goalTargetDate

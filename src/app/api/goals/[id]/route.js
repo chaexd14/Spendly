@@ -3,6 +3,17 @@ import { headers } from 'next/headers';
 
 // EDIT GOAL
 export async function PATCH(req) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized. Please log in.' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
   const { goalId, goalName, goalAmount } = await req.json();
 
   try {
@@ -22,6 +33,17 @@ export async function PATCH(req) {
 
 // DELETE GOAL
 export async function DELETE(req) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized. Please log in.' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
   const { goalId } = await req.json();
 
   try {

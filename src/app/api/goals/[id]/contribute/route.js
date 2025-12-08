@@ -3,6 +3,17 @@ import { headers } from 'next/headers';
 
 // ADD CONTRIBUTION TO GOAL
 export async function PATCH(req) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized. Please log in.' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
   const { goalId, amount } = await req.json();
 
   try {

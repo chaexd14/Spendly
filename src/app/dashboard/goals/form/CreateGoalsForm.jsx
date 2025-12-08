@@ -73,7 +73,7 @@ export default function CreateGoalsForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Goals</CardTitle>
+        <CardTitle>Set Goals</CardTitle>
       </CardHeader>
 
       <CardContent>
