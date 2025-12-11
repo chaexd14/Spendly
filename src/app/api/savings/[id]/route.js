@@ -2,9 +2,22 @@ import {
   editSavings,
   deleteSavings,
 } from '../../../../../lib/actions/savings-actions';
+import { headers } from 'next/headers';
+import { auth } from '../../../../../lib/auth';
 
 // EDIT SAVINGS
 export async function PATCH(req) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized. Please log in.' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
   const { savingsId, savingsTitle, savingsAmount } = await req.json();
 
   try {

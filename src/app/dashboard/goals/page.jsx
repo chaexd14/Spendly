@@ -1,9 +1,22 @@
-import GoalPage from './GoalPage';
+'use server';
 
-export default function page() {
+import GoalPage from './GoalPage';
+import { getGoals } from '../../../../lib/actions/goal-actions';
+import { getSessionWithRole } from '../../../../lib/session';
+import { redirect } from 'next/navigation';
+
+export default async function page() {
+  const session = await getSessionWithRole();
+
+  if (!session) {
+    redirect('/auth/signin');
+  }
+
+  // Fetch initial data
+  const [userGoal] = await Promise.all([getGoals(session.user.id, 1)]);
   return (
     <>
-      <GoalPage />
+      <GoalPage userGoal={userGoal} />
     </>
   );
 }

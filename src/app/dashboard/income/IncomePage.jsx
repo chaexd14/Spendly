@@ -147,7 +147,11 @@ export default function IncomePage({ initialIncomes, initialTotalIncome }) {
                 </div>
 
                 <div className="py-3 pr-0 lg:col-start-3 lg:col-span-4 lg:pl-6">
-                  <ChartLineLinear incomes={incomes} />
+                  <ChartLineLinear
+                    data={incomes}
+                    dateKey="incomeDateReceived"
+                    amountKey="incomeAmount"
+                  />
                 </div>
               </div>
             </CardContent>

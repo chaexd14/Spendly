@@ -8,10 +8,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 
 import { Ellipsis } from 'lucide-react';
+
+import EditExpenses from '../../form/EditExpenses';
+import DeleteExpenses from '../../form/DeleteExpenses';
 
 export const ExpensesColumns = [
   {
@@ -74,8 +87,54 @@ export const ExpensesColumns = [
               <Separator />
             </div>
             <DropdownMenuGroup className="flex flex-col gap-1">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
+              <Dialog>
+                <DialogTrigger asChild className="w-full">
+                  <DropdownMenuItem
+                    onSelect={(event) => event.preventDefault()}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Goal</DialogTitle>
+                    <DialogDescription>
+                      <strong>{item.expenseTitle}</strong>
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <EditExpenses
+                    expenseId={item.expenseId}
+                    expenseTitle={item.expenseTitle}
+                    expenseCategory={item.expenseCategory}
+                    expenseDescription={item.expenseDescription}
+                    expenseAmount={item.expenseAmount}
+                  />
+                </DialogContent>
+              </Dialog>
+
+              <Dialog>
+                <DialogTrigger asChild className="w-full">
+                  <DropdownMenuItem
+                    onSelect={(event) => event.preventDefault()}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Delete Expenses</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete your Expenses{' '}
+                      <strong> {item.expenseTitle}</strong>?
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DeleteExpenses expenseId={item.expenseId} />
+                </DialogContent>
+              </Dialog>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

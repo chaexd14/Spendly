@@ -4,13 +4,29 @@ import {
 } from '../../../../lib/actions/savings-actions';
 
 import { auth } from '../../../../lib/auth';
+import { headers } from 'next/headers';
 
 // ADD SAVINGS
 export async function POST(req) {
-  const { userId, savingsTitle, savingsAmount } = await req.json();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user?.id) {
+    return new Response(
+      JSON.stringify({ message: 'Unauthorized. Please log in.' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  const { savingsTitle, savingsAmount } = await req.json();
 
   try {
-    const result = await addSavings(userId, savingsTitle, savingsAmount);
+    const result = await addSavings(
+      session.user.id,
+      savingsTitle,
+      savingsAmount
+    );
 
     return new Response(JSON.stringify(result), {
       headers: { 'Content-Type': 'application/json' },

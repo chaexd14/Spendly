@@ -23,13 +23,13 @@ const chartConfig = {
   },
 };
 
-export default function ChartLineLinear({ incomes }) {
-  const chartData = (incomes ?? []).map((i) => ({
-    month: new Date(i.incomeDateReceived).toLocaleDateString('en-US', {
+export default function ChartLineLinear({ data, dateKey, amountKey }) {
+  const chartData = (data ?? []).map((item) => ({
+    month: new Date(item[dateKey]).toLocaleDateString('en-US', {
       month: 'short',
       year: 'numeric',
     }),
-    amount: i.incomeAmount,
+    amount: item[amountKey],
   }));
 
   return (

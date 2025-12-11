@@ -93,7 +93,7 @@ model Income {
   incomeDateReceived DateTime @map("income_date_received")
   createdAt          DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("incomes")
 }
@@ -113,14 +113,14 @@ model Budget {
 
   expenses Expense[]
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("budgets")
 }
 
 model Expense {
   expenseId          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String
+  userId             String   @map("user_id")
   budgetId           String   @map("budget_id") @db.ObjectId
   expenseTitle       String   @map("expense_title")
   expenseCategory    String   @map("expense_category")
@@ -129,7 +129,7 @@ model Expense {
   expenseDate        DateTime @map("expense_date")
   createdAt          DateTime @default(now())
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   budget Budget @relation(fields: [budgetId], references: [budgetId], onDelete: Cascade)
 
   @@map("expenses")
@@ -147,7 +147,7 @@ model Goal {
   updatedAt         DateTime @default(now()) @updatedAt
 
   contributions Contribution[]
-  user          User           @relation(fields: [userId], references: [id])
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("goals")
 }
@@ -162,8 +162,8 @@ model Contribution {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @default(now()) @updatedAt
 
-  goal Goal @relation(fields: [goalId], references: [goalId])
-  user User @relation(fields: [userId], references: [id])
+  goal Goal @relation(fields: [goalId], references: [goalId], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("contributions")
 }
@@ -176,7 +176,7 @@ model Savings {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now()) @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("savings")
 }
@@ -187,5 +187,5 @@ model ChatThread {
   messages  Json
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

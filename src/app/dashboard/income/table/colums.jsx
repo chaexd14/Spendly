@@ -1,5 +1,31 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
+import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
+import { Separator } from '@/components/ui/separator';
+
+import { Ellipsis } from 'lucide-react';
+
+import EditIncome from '../forms/EditIncome';
+import DeleteIncome from '../forms/DeleteIncome';
+
 export const Columns = [
   {
     accessorKey: 'incomeTitle',
@@ -39,5 +65,82 @@ export const Columns = [
     accessorKey: 'incomeDateReceived',
     header: 'Date',
     cell: ({ getValue }) => new Date(getValue()).toLocaleDateString(),
+  },
+
+  {
+    header: 'Actions',
+    id: 'actions',
+    cell: ({ row }) => {
+      const item = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost">
+              <Ellipsis />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent
+            className="w-[90px] rounded-lg flex flex-col gap-2 p-3"
+            align="end"
+          >
+            <div>
+              <DropdownMenuLabel className="p-1">Actions</DropdownMenuLabel>
+              <Separator />
+            </div>
+            <DropdownMenuGroup className="flex flex-col gap-1">
+              <Dialog>
+                <DialogTrigger asChild className="w-full">
+                  <DropdownMenuItem
+                    onSelect={(event) => event.preventDefault()}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Savings</DialogTitle>
+                    <DialogDescription>
+                      <strong>{item.incomeTitle}</strong>
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <EditIncome
+                    incomeId={item.incomeId}
+                    incomeTitle={item.incomeTitle}
+                    incomeSource={item.incomeSource}
+                    incomeAmount={item.incomeAmount}
+                  />
+                </DialogContent>
+              </Dialog>
+
+              <Dialog>
+                <DialogTrigger asChild className="w-full">
+                  <DropdownMenuItem
+                    onSelect={(event) => event.preventDefault()}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Delete Income</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete your income{' '}
+                      <strong>{item.incomeTitle}</strong>?
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DeleteIncome incomeId={item.incomeId} />
+                </DialogContent>
+              </Dialog>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];

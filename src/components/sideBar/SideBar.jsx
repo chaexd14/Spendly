@@ -60,19 +60,12 @@ export function SideBar({ session }) {
       title: 'Goals',
       url: '/dashboard/goals',
       icon: Target,
-      items: [
-        { title: 'Set Goal', url: '#' },
-        { title: 'Track Goals', url: '#' },
-      ],
+      items: [{ title: 'Track Goals', url: '/dashboard/goals/manage' }],
     },
     {
       title: 'Savings',
       url: '/dashboard/savings',
       icon: PiggyBank,
-      items: [
-        { title: 'Add Savings', url: '#' },
-        { title: 'Savings Overview', url: '#' },
-      ],
     },
   ];
 
@@ -83,7 +76,7 @@ export function SideBar({ session }) {
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={navItems} />
+        <NavMain items={navItems} session={session} />
       </SidebarContent>
 
       <SidebarFooter>

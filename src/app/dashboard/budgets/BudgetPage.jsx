@@ -25,15 +25,12 @@ import RecordBudgetForm from './form/RecordBudgetForm';
 import ChartBarHorizontal from '@/app/components/charts/chart-bar-horizontal';
 
 export default function BudgetPage({ userBudgets }) {
-  const router = useRouter();
   const [budgets, setbudgets] = useState(userBudgets.budgets);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [budgetSum, setBudgetSum] = useState(userBudgets.totalBudgetSum);
   const [expensesSum, setExpensesSum] = useState(userBudgets.totalExpensesSum);
-
-  console.log(expensesSum);
 
   const data = budgets.map((b) => ({
     id: b.budgetId,

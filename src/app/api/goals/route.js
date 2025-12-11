@@ -1,6 +1,7 @@
 import { createGoal, getGoals } from '../../../../lib/actions/goal-actions';
 
 import { auth } from '../../../../lib/auth';
+import { headers } from 'next/headers';
 
 // Create Goal
 export async function POST(req) {

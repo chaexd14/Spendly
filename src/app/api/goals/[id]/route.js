@@ -1,5 +1,6 @@
 import { editGoal, deleteGoal } from '../../../../../lib/actions/goal-actions';
 import { headers } from 'next/headers';
+import { auth } from '../../../../../lib/auth';
 
 // EDIT GOAL
 export async function PATCH(req) {

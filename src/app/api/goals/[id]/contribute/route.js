@@ -1,5 +1,6 @@
 import { addToGoal } from '../../../../../../lib/actions/goal-actions';
 import { headers } from 'next/headers';
+import { auth } from '../../../../../../lib/auth';
 
 // ADD CONTRIBUTION TO GOAL
 export async function PATCH(req) {

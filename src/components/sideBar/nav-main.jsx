@@ -17,9 +17,11 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
-import { LayoutDashboard, Bot } from 'lucide-react';
+import { LayoutDashboard, Bot, ShieldUser } from 'lucide-react';
 
-export function NavMain({ items }) {
+export function NavMain({ items, session }) {
+  const user = session.user;
+
   return (
     <>
       <SidebarGroup>
@@ -37,6 +39,19 @@ export function NavMain({ items }) {
         </SidebarMenu>
       </SidebarGroup>
 
+      {user.role === 'admin' && (
+        <SidebarGroup>
+          <SidebarGroupLabel>Admin</SidebarGroupLabel>
+          <SidebarMenu>
+            <SidebarMenuButton tooltip="Users" className="px-3 py-5 text-base">
+              <ShieldUser />
+              <a href="/dashboard/admin">
+                <span>Manage App</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenu>
+        </SidebarGroup>
+      )}
       <SidebarGroup>
         <SidebarGroupLabel>Ask Spendlyy</SidebarGroupLabel>
         <SidebarMenu>

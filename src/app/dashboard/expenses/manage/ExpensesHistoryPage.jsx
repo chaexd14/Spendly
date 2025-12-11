@@ -12,6 +12,7 @@ import { ExpensesColumns } from './table/ExpensesColumns';
 
 export default function ExpensesHistoryPage({ userExpenses }) {
   const data = userExpenses.map((expenses) => ({
+    expenseId: expenses.expenseId,
     expenseTitle: expenses.expenseTitle,
     expenseCategory: expenses.expenseCategory,
     expenseAmount: expenses.expenseAmount,

@@ -8,10 +8,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 
 import { Ellipsis } from 'lucide-react';
+
+import EditBudget from '../../form/EditBudget';
+import DeleteBudget from '../../form/DeleteBudget';
 
 export const BudgetColumns = [
   {
@@ -101,8 +114,53 @@ export const BudgetColumns = [
               <Separator />
             </div>
             <DropdownMenuGroup className="flex flex-col gap-1">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>Delete</DropdownMenuItem>
+              <Dialog>
+                <DialogTrigger asChild className="w-full">
+                  <DropdownMenuItem
+                    onSelect={(event) => event.preventDefault()}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Budget</DialogTitle>
+                    <DialogDescription>
+                      <strong>{item.title}</strong>
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <EditBudget
+                    budgetId={item.id}
+                    budgetTitle={item.title}
+                    budgetPeriodType={item.periodType}
+                    totalBudget={item.totalBudget}
+                  />
+                </DialogContent>
+              </Dialog>
+
+              <Dialog>
+                <DialogTrigger asChild className="w-full">
+                  <DropdownMenuItem
+                    onSelect={(event) => event.preventDefault()}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DialogTrigger>
+
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Delete Income</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete your income{' '}
+                      <strong>{item.budgetTitle}</strong>?
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DeleteBudget budgetId={item.budgetId} />
+                </DialogContent>
+              </Dialog>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
