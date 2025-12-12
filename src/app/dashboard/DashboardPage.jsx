@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -7,10 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 import Image from 'next/image';
 
 import { DashboardChartBarHorizontal } from '../components/charts/dashboard-chart-bar-horizontal';
+
+import EditAccount from './form/editAccount';
 
 import {
   BanknoteArrowUpIcon,
@@ -32,6 +44,7 @@ export default function DashboardPage({
   const totalExpenses = userBudget.totalExpensesSum;
   const totalSavings = userSavings.totalSavings;
 
+  console.log(user.id);
   console.log(image);
   return (
     <div className="flex flex-col gap-5">
@@ -58,7 +71,29 @@ export default function DashboardPage({
           </CardContent>
 
           <CardFooter>
-            <Button className="w-full">Edit Profile</Button>
+            <Dialog>
+              <DialogTrigger asChild className="w-full">
+                <Button onSelect={(event) => event.preventDefault()}>
+                  Edit Profile
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Edit Account</DialogTitle>
+                  <DialogDescription>
+                    <strong>{user.name}</strong>
+                  </DialogDescription>
+                </DialogHeader>
+
+                <EditAccount
+                  id={user.id}
+                  name={user.name}
+                  email={user.email}
+                  image={user.image}
+                />
+              </DialogContent>
+            </Dialog>
           </CardFooter>
         </Card>
 
