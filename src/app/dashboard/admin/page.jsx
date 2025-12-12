@@ -1,5 +1,5 @@
 import AdminPage from './AdminPage';
-import { getUsers } from '../../../../lib/actions/admin-actions';
+import { getUsers, getUserCount } from '../../../../lib/actions/admin-actions';
 import { getSessionWithRole } from '../../../../lib/session';
 
 export default async function page() {
@@ -10,9 +10,11 @@ export default async function page() {
   }
 
   const [userAccount] = await Promise.all([getUsers()]);
+  const [userCount] = await Promise.all([getUserCount()]);
+
   return (
     <div>
-      <AdminPage userAccount={userAccount} />
+      <AdminPage userAccount={userAccount} userCount={userCount} />
     </div>
   );
 }

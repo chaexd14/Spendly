@@ -19,6 +19,8 @@ export default function ExpensesHistoryPage({ userExpenses }) {
     expenseDate: new Date(expenses.expenseDate),
   }));
 
+  console.log(data);
+
   return (
     <div className="grid gap-5">
       <Card>

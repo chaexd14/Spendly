@@ -12,6 +12,13 @@ import Image from 'next/image';
 
 import { DashboardChartBarHorizontal } from '../components/charts/dashboard-chart-bar-horizontal';
 
+import {
+  BanknoteArrowUpIcon,
+  PiggyBank,
+  CreditCard,
+  ShoppingCart,
+} from 'lucide-react';
+
 export default function DashboardPage({
   session,
   userIncome,
@@ -70,36 +77,52 @@ export default function DashboardPage({
             <Card>
               <CardContent className="p-5">
                 <CardTitle className="text-lg">Total Income</CardTitle>
-                <CardTitle className="text-3xl text-green-600">
-                  <span>₱{totalIncome.toLocaleString()}</span>
-                </CardTitle>
+
+                <div className="flex items-center gap-5">
+                  <BanknoteArrowUpIcon />
+                  <CardTitle className="text-3xl text-green-600">
+                    <span>₱{totalIncome.toLocaleString()}</span>
+                  </CardTitle>
+                </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-5">
                 <CardTitle className="text-lg">Savings</CardTitle>
-                <CardTitle className="text-3xl text-green-600">
-                  <span>₱{totalSavings.toLocaleString()}</span>
-                </CardTitle>
+
+                <div className="flex items-center gap-5">
+                  <PiggyBank />
+                  <CardTitle className="text-3xl text-green-600">
+                    <span>₱{totalSavings.toLocaleString()}</span>
+                  </CardTitle>
+                </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-5">
                 <CardTitle className="text-lg">Total Budget</CardTitle>
-                <CardTitle className="text-3xl text-blue-600">
-                  <span>₱{totalBudget.toLocaleString()}</span>
-                </CardTitle>
+
+                <div className="flex items-center gap-5">
+                  <CreditCard />
+                  <CardTitle className="text-3xl text-blue-600">
+                    <span>₱{totalBudget.toLocaleString()}</span>
+                  </CardTitle>
+                </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="p-5">
                 <CardTitle className="text-lg"> Expenses</CardTitle>
-                <CardTitle className="text-3xl text-orange-600">
-                  <span>₱{totalExpenses.toLocaleString()}</span>
-                </CardTitle>
+
+                <div className="flex items-center gap-5">
+                  <ShoppingCart />
+                  <CardTitle className="text-3xl text-orange-600">
+                    <span>₱{totalExpenses.toLocaleString()}</span>
+                  </CardTitle>
+                </div>
               </CardContent>
             </Card>
           </div>

@@ -14,8 +14,11 @@ import { useState } from 'react';
 import { DataTable } from '../income/table/data-table';
 import { adminColumns } from './table/AdminColumns';
 
-export default function AdminPage({ userAccount }) {
+import { User, TrendingUp, Eye } from 'lucide-react';
+
+export default function AdminPage({ userAccount, userCount }) {
   const [accounts, setAccounts] = useState(userAccount);
+  const [userCounts, setUserCounts] = useState(userCount);
 
   const data = accounts.map((d) => ({
     id: d.id,
@@ -27,9 +30,8 @@ export default function AdminPage({ userAccount }) {
     createdAt: d.createdAt,
   }));
 
-  console.log(data);
+  console.log(userCounts);
 
-  console.log(data);
   return (
     <div className="flex flex-col h-full gap-5">
       <Card>
@@ -39,6 +41,45 @@ export default function AdminPage({ userAccount }) {
           </div>
         </CardHeader>
       </Card>
+
+      <div className="grid grid-cols-3 gap-5">
+        <Card>
+          <CardContent className="p-5">
+            <CardTitle className="text-lg">Total User</CardTitle>
+            <div className="flex items-center justify-center gap-5">
+              <User />
+              <CardTitle className="text-4xl text-green-600">
+                <span>{userCounts}</span>
+              </CardTitle>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-5">
+            <CardTitle className="text-lg">Total App Visit</CardTitle>
+
+            <div className="flex items-center justify-center gap-5">
+              <TrendingUp />
+              <CardTitle className="text-4xl text-green-600">
+                <span>136</span>
+              </CardTitle>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-5">
+            <CardTitle className="text-lg">Total User</CardTitle>
+            <div className="flex items-center justify-center gap-5">
+              <User />
+              <CardTitle className="text-4xl text-green-600">
+                <span>{userCounts}</span>
+              </CardTitle>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <DataTable columns={adminColumns} data={data} />
     </div>
