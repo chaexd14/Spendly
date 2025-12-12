@@ -15,6 +15,8 @@ async function page() {
 
   if (!session) {
     redirect('/auth/signin');
+  } else {
+    redirect('/dashboard');
   }
 
   // Fetch initial data securely on the server
